@@ -33,13 +33,13 @@ This documentation describes Minimum Viable Product (MVP) if BookedIn.
 10. As an admin user I want to be able to remove possibly offensive reviews.
 
 ## User Interface
-Views when logged out
+**Views when logged out**
 - Login view
   - Input username and password or else create a new account
 - Create new account view
   - Create new account, afterwards redirect to Login view
 
-Views when logged in
+**Views when logged in**
 - When logged in, all views will incorporate a navbar
 - Profile view
   - Default view, see your own profile information and library of books
