@@ -5,7 +5,7 @@ BookedIn is a community for readers. Make an account, share what you have been r
 The main idea for BookedIn is to be a hub for readers. Add books to your collection, review and share them. See what others have been reading and what is popular.
 
 BookedIn will be built mostly using Java SpringBoot. Thymeleaf will be used for template engine. BookedIn will use external SQL database (tba) to store data about users, books, reviews etc. Google Books API will be used to search for books:
-(https://developers.google.com/books/docs/v1/getting_started)[https://developers.google.com/books/docs/v1/getting_started]
+[https://developers.google.com/books/docs/v1/getting_started]
 (https://developers.google.com/books/docs/v1/reference/volumes/list)[https://developers.google.com/books/docs/v1/reference/volumes/list]
 
 
