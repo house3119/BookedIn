@@ -57,6 +57,8 @@ This documentation describes Minimum Viable Product (MVP) if BookedIn.
 ## Database
 External SQL Database will be used.
 
+![Image of db](https://github.com/house3119/BookedIn/blob/main/BookedIn_db.pdf)
+
 > ### _Users_
 > _Information about individual users._
 >
