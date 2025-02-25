@@ -69,7 +69,7 @@ External SQL Database will be used.
 > Age | number | User age
 > Account_type | number, FK, not null | User account type, reference to Account_types table.
 >
-> > ### _Account_types_
+> ### _Account_types_
 > _Information about account types._
 >
 > Field | Type | Description
@@ -78,7 +78,7 @@ External SQL Database will be used.
 > Account_type | varchar(100), not null | Account type (admin, user etc.)
 > Description | varchar(200) | Description of account type
 >
-> > > ### _Books_
+> ### _Books_
 > _Books saved to database._
 >
 > Field | Type | Description
@@ -88,7 +88,7 @@ External SQL Database will be used.
 > Author | varchar(100), not null | Author of the book
 > Author | varchar(100), not null | Author of the book
 >
-> > > > ### _UsersBooks_
+>  ### _UsersBooks_
 > _Information on who has added which books to their library._
 >
 > Field | Type | Description
@@ -98,7 +98,7 @@ External SQL Database will be used.
 > Book_id | int, FK, not null | Reference to a book
 > Date | date, not null, auto | When was added
 >
-> > > > > ### _Reviews_
+>  ### _Reviews_
 > _Information on reviews._
 >
 > Field | Type | Description
@@ -109,8 +109,8 @@ External SQL Database will be used.
 > Date | date, not null, auto | When was added
 > Review | varchar(3000), not null | Text review
 > Rating | int (1-5), not null | Rating
-> >
-> > > > > ### _Following_
+> 
+> ### _Following_
 > _Information on users following each other._
 >
 > Field | Type | Description
