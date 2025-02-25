@@ -6,7 +6,7 @@ The main idea for BookedIn is to be a hub for readers. Add books to your collect
 
 BookedIn will be built mostly using Java SpringBoot. Thymeleaf will be used for template engine. BookedIn will use external SQL database (tba) to store data about users, books, reviews etc. Google Books API will be used to search for books:
 https://developers.google.com/books/docs/v1/getting_started
-(https://developers.google.com/books/docs/v1/reference/volumes/list)[https://developers.google.com/books/docs/v1/reference/volumes/list]
+https://developers.google.com/books/docs/v1/reference/volumes/list
 
 
 This documentation describes Minimum Viable Product (MVP) if BookedIn.
