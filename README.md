@@ -1,8 +1,8 @@
 # BookedIn
-BookedIn is a community for readers. Make an account, share what you have been reading recently and see what others have been reading.
+BookedIn is a simple community for readers. Make an account, share and review what you have been reading recently and see what others have been reading.
 
 ## Introduction
-The main idea for BookedIn is to be a hub for readers. Add books to your collection, review and share them. See what others have been reading and what is popular.
+The main idea for BookedIn is to be a small hub for readers. Add books to your collection, review and share them. See what others have been reading and what is popular.
 
 BookedIn will be built mostly using Java SpringBoot. Thymeleaf will be used for template engine. BookedIn will use external SQL database (tba) to store data about users, books, reviews etc. Google Books API will be used to search for books:
 
@@ -17,7 +17,7 @@ This documentation describes Minimum Viable Product (MVP) if BookedIn.
 
 ### User Groups
 - Regular User
-- Admin
+- Admin User
 
 ### User Stories
 
@@ -30,7 +30,7 @@ This documentation describes Minimum Viable Product (MVP) if BookedIn.
 7. As a user I want to be able to see a list of who i'm following in my profile page.
 8. As a user I want to be able to stop following a user.
 9. As a user I want to be able to update my password if needed.
-10. as an admin I want to be able to remove possibly offensive reviews.
+10. As an admin user I want to be able to remove possibly offensive reviews.
 
 ## User Interface
 Views when logged out
@@ -64,11 +64,20 @@ External SQL Database will be used.
 > ------ | ------ | ------
 > User_id | int, PK, autonumber, not null | User id and primary key.
 > Username | varchar(100), not null | Username
+> Avatar_url | varchar(200) | URL for avatar
 > Password_hash | varchar(60), not null | Password hash
-> Country | varchar(30) | User country
+> Country | number, FK | User country, reference to Countries table
 > Age | number | User age
 > Account_type | number, FK, not null | User account type, reference to Account_types table.
+> 
+>> ### _Countries_
+> _Information about account types._
 >
+> Field | Type | Description
+> ------ | ------ | ------
+> Country_id | int, PK, autonumber, not null | Country id and primary key.
+> Name | varchar(100), not null | Name of the country
+> 
 > ### _Account_types_
 > _Information about account types._
 >
