@@ -93,10 +93,23 @@ External SQL Database will be used.
 > Field | Type | Description
 > ------ | ------ | ------
 > Book_id | varchar(80), PK, not null | Book id taken from Google API
-> Name | varchar(100), not null | Name of the book
+> Title | varchar(100), not null | Title of the book
 > Author | varchar(100), not null | Author of the book
-> Author | varchar(100), not null | Author of the book
+> Published | number, not null | Year published
+> Description | varchar(3000), not null | Description of the book
+> Isbn | varchar(13), not null | ISBN of the book
+> Page_count | number, not null | Pagecount of the book
+> Language | varchar(2), not null | Language of the book, reference to Languages table
+> Img_link | varchar(200), not null | Image link for the book
 >
+>  ### _Languages_
+> _Information on languages._
+>
+> Field | Type | Description
+> ------ | ------ | ------
+> Language_id | varchar(2), PK, not null | Language id
+> Language | varchar(40), not null | Language name
+> 
 >  ### _UsersBooks_
 > _Information on who has added which books to their library._
 >
