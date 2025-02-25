@@ -26,37 +26,98 @@ This documentation describes Minimum Viable Product (MVP) if BookedIn.
 3. As a user I want to be able to see all books in my library as a list.
 4. As a user I need to be able to determine a status for a book in my library (want to read / currently reading / finished).
 5. As a user I want to be able to write and review for book I have finished.
-6. As a user I want to be able to be able to search for other users and add them to my friend list.
-7. As a user I want to be able to see a list of my friends in my profile page.
-8. As a user I want to be able to remove a friend from my friend list.
+6. As a user I want to be able to be able to search for other users and follow them.
+7. As a user I want to be able to see a list of who i'm following in my profile page.
+8. As a user I want to be able to stop following a user.
 9. As a user I want to be able to update my password if needed.
 10. as an admin I want to be able to remove possibly offensive reviews.
 
 ## User Interface
+Views when logged out
 - Login view
   - Input username and password or else create a new account
 - Create new account view
   - Create new account, afterwards redirect to Login view
+
+Views when logged in
+- When logged in, all views will incorporate a navbar
 - Profile view
   - Default view, see your own profile information and library of books
 - Search books view
   - View for searching books and adding them to your library
 - Add review view
-  - Accesses from library view. Add review and rating for a book.
-- Friend list view
-  - See a list of your friends, links to their profiles and possibility of removing them as a friend
+  - Accessed propbably from library view. Add review and rating for a book.
+- Following list view
+  - See a list of who you're following, links to their profiles and possibility of stopping following them
 - Settings/ change password view
   - Change password and maybe add profile icon and other information about yourself
-- (Activity view - see recent activity from your friends) --> If I have time
-- (Top Books view - see most popular/trending books) --> If I have time
+- (Activity view - see recent activity from people you follow) --> If time
+- (Top Books view - see most popular/trending books) --> If time
 
 ## Database
 External SQL Database will be used.
 
-Tables:
-- Users --> Information about individual users, name, passwordhash, user icon url, user status etc.
-- UsersBooks --> Information about which user has which book in their bookself (needed as relation between Users and Books is ManyToMany)
-- Books --> Information about books
-- Friends --> Information about who has added who to friends
-- Reviews --> Information about single review: text, rating, user who wrote (fk), book (fk), likes
+> ### _Users_
+> _Information about individual users._
+>
+> Field | Type | Description
+> ------ | ------ | ------
+> User_id | int, PK, autonumber, not null | User id and primary key.
+> Username | varchar(100), not null | Username
+> Password_hash | varchar(60), not null | Password hash
+> Country | varchar(30) | User country
+> Age | number | User age
+> Account_type | number, FK, not null | User account type, reference to Account_types table.
+>
+> > ### _Account_types_
+> _Information about account types._
+>
+> Field | Type | Description
+> ------ | ------ | ------
+> Account_type_id | int, PK, autonumber, not null | Account type id and primary key.
+> Account_type | varchar(100), not null | Account type (admin, user etc.)
+> Description | varchar(200) | Description of account type
+>
+> > > ### _Books_
+> _Books saved to database._
+>
+> Field | Type | Description
+> ------ | ------ | ------
+> Book_id | varchar(80), PK, not null | Book id taken from Google API
+> Name | varchar(100), not null | Name of the book
+> Author | varchar(100), not null | Author of the book
+> Author | varchar(100), not null | Author of the book
+>
+> > > > ### _UsersBooks_
+> _Information on who has added which books to their library._
+>
+> Field | Type | Description
+> ------ | ------ | ------
+> Row_id | int, autonumber, PK, not null | Row identifier and PK
+> User_id | int, FK, not null | Reference to user
+> Book_id | int, FK, not null | Reference to a book
+> Date | date, not null, auto | When was added
+>
+> > > > > ### _Reviews_
+> _Information on reviews._
+>
+> Field | Type | Description
+> ------ | ------ | ------
+> Review_id | int, autonumber, PK, not null | Review id and PK
+> User_id | int, FK, not null | Reference to user
+> Book_id | int, FK, not null | Reference to a book
+> Date | date, not null, auto | When was added
+> Review | varchar(3000), not null | Text review
+> Rating | int (1-5), not null | Rating
+> >
+> > > > > ### _Following_
+> _Information on users following each other._
+>
+> Field | Type | Description
+> ------ | ------ | ------
+> Row_id | int, autonumber, PK, not null | Row identifier and PK
+> Follower_id | int, FK, not null | Reference to user who is following
+> Followed_id | int, FK, not null | Reference to user who is being followed
+> Date | date, not null, auto | When was added
+
 
