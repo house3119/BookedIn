@@ -21,7 +21,7 @@ public class AccountType {
   @NotEmpty(message = "Account type is mandatory")
   @Size(max = 100)
   @Column(name = "account_type", nullable = false, updatable = false)
-  private String account_type;
+  private String type;
 
   @Size(max = 200)
   @Column(name = "description", nullable = false, updatable = false)
@@ -30,12 +30,12 @@ public class AccountType {
   public AccountType() { }
 
   public AccountType(@NotEmpty(message = "Account type is mandatory") @Size(max = 100) String account_type) {
-    this.account_type = account_type;
+    this.type = account_type;
   }
 
   public AccountType(@NotEmpty(message = "Account type is mandatory") @Size(max = 100) String account_type,
       @Size(max = 200) String description) {
-    this.account_type = account_type;
+    this.type = account_type;
     this.description = description;
   }
 
@@ -48,11 +48,11 @@ public class AccountType {
   }
 
   public String getAccount_type() {
-    return account_type;
+    return type;
   }
 
   public void setAccount_type(String account_type) {
-    this.account_type = account_type;
+    this.type = account_type;
   }
 
   public String getDescription() {
@@ -65,7 +65,7 @@ public class AccountType {
 
   @Override
   public String toString() {
-    return "AccountType [account_type_id=" + account_type_id + ", account_type=" + account_type + ", description="
+    return "AccountType [account_type_id=" + account_type_id + ", account_type=" + type + ", description="
         + description + "]";
   }
 
