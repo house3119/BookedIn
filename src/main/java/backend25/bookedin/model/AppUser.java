@@ -1,11 +1,14 @@
 package backend25.bookedin.model;
 
+import java.util.Set;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
@@ -45,6 +48,28 @@ public class AppUser {
   @JoinColumn(name = "account_type_id")
   private AccountType account_type;
 
+  @ManyToMany
+  Set<AppUser> followers;
+
+  @ManyToMany
+  Set<AppUser> following;
+
+  public Set<AppUser> getFollowers() {
+    return followers;
+  }
+
+  public void setFollowers(Set<AppUser> followers) {
+    this.followers = followers;
+  }
+
+  public Set<AppUser> getFollowing() {
+    return following;
+  }
+
+  public void setFollowing(Set<AppUser> following) {
+    this.following = following;
+  }
+
   public AppUser() { }
 
   public AppUser(
@@ -65,6 +90,21 @@ public class AppUser {
     this.country = country;
     this.age = age;
     this.account_type = account_type;
+  }
+
+  public AppUser(
+      @NotEmpty(message = "Username is mandatory") @Size(max = 100, message = "Username can be max 100 characters long") String username,
+      @Size(max = 200, message = "Avatar URL can be max 200 characters long") String avatar_url,
+      @NotEmpty(message = "Password hash is mandatory") @Size(max = 60) String password_hash, Country country, int age,
+      AccountType account_type, Set<AppUser> followers, Set<AppUser> following) {
+    this.username = username;
+    this.avatar_url = avatar_url;
+    this.password_hash = password_hash;
+    this.country = country;
+    this.age = age;
+    this.account_type = account_type;
+    this.followers = followers;
+    this.following = following;
   }
 
   public Long getUser_id() {
@@ -126,7 +166,8 @@ public class AppUser {
   @Override
   public String toString() {
     return "AppUser [user_id=" + user_id + ", username=" + username + ", avatar_url=" + avatar_url + ", password_hash="
-        + password_hash + ", country=" + country + ", age=" + age + ", account_type=" + account_type + "]";
+        + password_hash + ", country=" + country + ", age=" + age + ", account_type=" + account_type + ", followers="
+        + followers + ", following=" + following + "]";
   }
 
 }

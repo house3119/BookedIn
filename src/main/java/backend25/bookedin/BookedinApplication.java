@@ -1,6 +1,8 @@
 package backend25.bookedin;
 
 import java.io.FileReader;
+import java.time.LocalDate;
+import java.util.HashSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,25 +53,47 @@ public class BookedinApplication {
 
 			log.info("Add some users to db...");
 			AppUser user1 = new AppUser(
-				"user",
-				"https://www.detectiveconanworld.com/wiki/images/thumb/d/db/Kogoro%27s_diff_look.jpg/197px-Kogoro%27s_diff_look.jpg", "$2a$06$3jYRJrg0ghaaypjZ/.g4SethoeA51ph3UD4kZi9oPkeMTpjKU5uo6",
-				countryRepository.findByName("Finland"),
+				"Bilbo",
+				"https://static.wikia.nocookie.net/peter-jacksons-the-lord-of-the-rings-trilogy/images/f/ff/Hudfzq7jltpvuhft.jpg/revision/latest?cb=20160618134352", "$2a$06$3jYRJrg0ghaaypjZ/.g4SethoeA51ph3UD4kZi9oPkeMTpjKU5uo6",
+				countryRepository.findByName("Sweden"),
 				1969,
-				accountTypeRepository.findByType("USER")
+				accountTypeRepository.findByType("USER"),
+				new HashSet<AppUser>(),
+				new HashSet<AppUser>()
 			);
 			AppUser user2 = new AppUser(
-				"admin",
-				"https://www.giantbomb.com/a/uploads/scale_small/7/77081/1249176-conan_edogawa.jpg",
+				"Frodo",
+				"https://static.wikia.nocookie.net/pjmidearthfilms/images/3/34/Frodo.jpg/revision/latest?cb=20200725035857",
 				"$2a$10$0MMwY.IQqpsVc1jC8u7IJ.2rT8b0Cd3b3sfIBGV2zfgnPGtT4r0.C",
 				countryRepository.findByName("Finland"),
 				1988,
-				accountTypeRepository.findByType("ADMIN")
+				accountTypeRepository.findByType("ADMIN"),
+				new HashSet<AppUser>(),
+				new HashSet<AppUser>()
 			);
-
+			AppUser user3 = new AppUser(
+				"Gandalf",
+				"https://static.wixstatic.com/media/065e6b_dd1a8624bd5b40c9848aeec671ed811b.png/v1/fill/w_568,h_444,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/065e6b_dd1a8624bd5b40c9848aeec671ed811b.png",
+				"$2a$06$3jYRJrg0ghaaypjZ/.g4SethoeA51ph3UD4kZi9oPkeMTpjKU5uo6",
+				countryRepository.findByName("Germany"),
+				1569,
+				accountTypeRepository.findByType("USER"),
+				new HashSet<AppUser>(),
+				new HashSet<AppUser>()
+			);
 			appUserRepository.save(user1);
 			appUserRepository.save(user2);
+			appUserRepository.save(user3);
 
-
+			log.info("Bilbo follows Frodo and Gandalf...");
+			user1.getFollowing().add(user2);
+			user1.getFollowing().add(user3);
+			user2.getFollowers().add(user1);
+			user3.getFollowers().add(user1);
+			appUserRepository.save(user1);
+			appUserRepository.save(user2);
+			appUserRepository.save(user3);
+		
 		};
 
 	}
