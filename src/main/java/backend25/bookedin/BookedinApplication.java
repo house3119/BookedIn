@@ -21,6 +21,8 @@ import backend25.bookedin.model.Book;
 import backend25.bookedin.model.BookRepository;
 import backend25.bookedin.model.Country;
 import backend25.bookedin.model.CountryRepository;
+import backend25.bookedin.model.UsersBooks;
+import backend25.bookedin.model.UsersBooksRepository;
 
 @SpringBootApplication
 public class BookedinApplication {
@@ -36,7 +38,8 @@ public class BookedinApplication {
 		AccountTypeRepository accountTypeRepository,
 		AppUserRepository appUserRepository,
 		BookRepository bookRepository,
-		CountryRepository countryRepository
+		CountryRepository countryRepository,
+		UsersBooksRepository usersBooksRepository
 	) {
 		return(args) -> {
 
@@ -114,6 +117,11 @@ public class BookedinApplication {
 				"https://upload.wikimedia.org/wikipedia/en/b/b5/Harry_Potter_and_the_Half-Blood_Prince_cover.png"
 			);
 			bookRepository.save(book1);
+
+
+			log.info("Add a book to user...");
+			usersBooksRepository.save(new UsersBooks(user2, book1, LocalDate.now()));
+
 
 		};
 
