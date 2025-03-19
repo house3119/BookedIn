@@ -17,6 +17,8 @@ import backend25.bookedin.model.AccountType;
 import backend25.bookedin.model.AccountTypeRepository;
 import backend25.bookedin.model.AppUser;
 import backend25.bookedin.model.AppUserRepository;
+import backend25.bookedin.model.Book;
+import backend25.bookedin.model.BookRepository;
 import backend25.bookedin.model.Country;
 import backend25.bookedin.model.CountryRepository;
 
@@ -33,13 +35,16 @@ public class BookedinApplication {
 	public CommandLineRunner bookedinRunner (
 		AccountTypeRepository accountTypeRepository,
 		AppUserRepository appUserRepository,
+		BookRepository bookRepository,
 		CountryRepository countryRepository
 	) {
 		return(args) -> {
 
+
 			log.info("Add account types to db...");
 			accountTypeRepository.save(new AccountType("USER", "Basic user without any extra priviledges."));
 			accountTypeRepository.save(new AccountType("ADMIN", "Admin level user. Can perform various actions that normal users can't."));
+
 
 			log.info("Add countries to db from file...");
 			try (CSVReader csvReader = new CSVReader(new FileReader("src/main/resources/static/FCDO_Geographical_Names_Index_March_2024.csv"))) {
@@ -50,6 +55,7 @@ public class BookedinApplication {
 					}
 				}
 			}
+
 
 			log.info("Add some users to db...");
 			AppUser user1 = new AppUser(
@@ -85,6 +91,7 @@ public class BookedinApplication {
 			appUserRepository.save(user2);
 			appUserRepository.save(user3);
 
+
 			log.info("Bilbo follows Frodo and Gandalf...");
 			user1.getFollowing().add(user2);
 			user1.getFollowing().add(user3);
@@ -93,7 +100,21 @@ public class BookedinApplication {
 			appUserRepository.save(user1);
 			appUserRepository.save(user2);
 			appUserRepository.save(user3);
-		
+
+			
+			log.info("Add some example books to db...");
+			Book book1 = new Book(
+				"Harry Potter and the Half-Blood Prince",
+				"J.K. Rowling",
+				2005,
+				"Harry Potter and the Half-Blood Prince is a fantasy novel written by British author J. K. Rowling. It is the sixth and penultimate novel in the Harry Potter series, and takes place during Harry Potter's sixth year at the wizard school Hogwarts. The novel reveals events from the early life of Lord Voldemort, and chronicles Harry's preparations for the final battle against him.",
+				"0-7475-8108-8",
+				607,
+				"English",
+				"https://upload.wikimedia.org/wikipedia/en/b/b5/Harry_Potter_and_the_Half-Blood_Prince_cover.png"
+			);
+			bookRepository.save(book1);
+
 		};
 
 	}
