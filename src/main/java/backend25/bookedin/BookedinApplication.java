@@ -21,6 +21,8 @@ import backend25.bookedin.model.Book;
 import backend25.bookedin.model.BookRepository;
 import backend25.bookedin.model.Country;
 import backend25.bookedin.model.CountryRepository;
+import backend25.bookedin.model.Review;
+import backend25.bookedin.model.ReviewRepository;
 import backend25.bookedin.model.UsersBooks;
 import backend25.bookedin.model.UsersBooksRepository;
 
@@ -39,7 +41,8 @@ public class BookedinApplication {
 		AppUserRepository appUserRepository,
 		BookRepository bookRepository,
 		CountryRepository countryRepository,
-		UsersBooksRepository usersBooksRepository
+		UsersBooksRepository usersBooksRepository,
+		ReviewRepository reviewRepository
 	) {
 		return(args) -> {
 
@@ -122,6 +125,9 @@ public class BookedinApplication {
 			log.info("Add a book to user...");
 			usersBooksRepository.save(new UsersBooks(user2, book1, LocalDate.now()));
 
+
+			log.info("Add review for previous book...");
+			reviewRepository.save(new Review(user2, book1, LocalDate.now(), "Very good! Snape is the best!", 5));
 
 		};
 
