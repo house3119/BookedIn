@@ -48,6 +48,26 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
             <p><b>Followers: </b><span th:text="${followers}"></span></p>
           </div>
         </div>
+
+        <div class="row">
+          <div class="col-6">
+            <h2>Library</h2>
+            <table class="table-striped" th:if="${library.size() != 0}">
+              <tr>
+                <th>Title</th>
+                <th>Author</th>
+              </tr>
+              <tr th:each="usersBook, iter: ${library}">
+                <td th:text="${usersBook.book.title}"></td>
+                <td th:text="${usersBook.book.author}"></td>
+              </tr>
+            </table>
+            <p th:unless="${library.size() != 0}">No books yet..</p>
+          </div>
+          <div class="col-6">
+            <h2>Reviews</h2>
+          </div>
+        </div>
          
       </div>
     </main>

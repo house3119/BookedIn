@@ -125,11 +125,23 @@ public class BookedinApplication {
 				"English",
 				"https://upload.wikimedia.org/wikipedia/en/b/b5/Harry_Potter_and_the_Half-Blood_Prince_cover.png"
 			);
+			Book book2 = new Book(
+				"Harry Potter and the Deathy Hallows",
+				"J.K. Rowling",
+				2007,
+				"Harry Potter and the Deathly Hallows is a fantasy novel written by British author J. K. Rowling. It is the seventh and final novel in the Harry Potter series. It was released on 21 July 2007 in the United Kingdom by Bloomsbury Publishing, in the United States by Scholastic, and in Canada by Raincoast Books. The novel chronicles the events directly following Harry Potter and the Half-Blood Prince (2005) and the final confrontation between the wizards Harry Potter and Lord Voldemort.",
+				"0-7475-9105-9",
+				607,
+				"English",
+				"https://upload.wikimedia.org/wikipedia/en/a/a9/Harry_Potter_and_the_Deathly_Hallows.jpg"
+			);
 			bookRepository.save(book1);
+			bookRepository.save(book2);
 
 
 			log.info("Add a book to user...");
 			usersBooksRepository.save(new UsersBooks(user2, book1, LocalDate.now()));
+			usersBooksRepository.save(new UsersBooks(user2, book2, LocalDate.now()));
 
 
 			log.info("Add review for previous book...");

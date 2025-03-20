@@ -27,15 +27,15 @@ public class Book {
 
   @NotEmpty(message = "Author is required")
   @Size(max = 100, message = "Max 100 characters")
-  @Column(name = "author", nullable = false, unique = true)
+  @Column(name = "author", nullable = false)
   private String author;
 
   @NotNull(message = "Published year is required")
-  @Column(name = "published", nullable = false, unique = true)
+  @Column(name = "published", nullable = false)
   private int published_year;
 
   @Size(max = 3000, message = "Max 3000 characters")
-  @Column(name = "description", nullable = false, unique = true)
+  @Column(name = "description", nullable = false)
   private String description;
 
   @NotEmpty(message = "ISBN is required")
@@ -45,15 +45,15 @@ public class Book {
 
   @NotNull(message = "Page count is required")
   @Min(1)
-  @Column(name = "page_count", nullable = false, unique = true)
+  @Column(name = "page_count", nullable = false)
   private int page_count;
 
   @NotEmpty(message = "Language is required")
-  @Column(name = "language", nullable = false, unique = true)
+  @Column(name = "language", nullable = false)
   private String language;
 
   @Size(max = 200, message = "Max 200 characters")
-  @Column(name = "img_link", nullable = false, unique = true)
+  @Column(name = "img_link", nullable = false)
   private String img_link;
 
   public Book() {

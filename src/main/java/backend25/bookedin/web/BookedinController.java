@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import backend25.bookedin.model.AppUser;
 import backend25.bookedin.model.AppUserRepository;
+import backend25.bookedin.model.ReviewRepository;
+import backend25.bookedin.model.UsersBooksRepository;
 
 
 @Controller
@@ -23,9 +25,13 @@ import backend25.bookedin.model.AppUserRepository;
 public class BookedinController {
 
   private AppUserRepository appUserRepository;
+  private UsersBooksRepository usersBooksRepository;
+  private ReviewRepository reviewRepository;
 
-  public BookedinController(AppUserRepository appUserRepository) {
+  public BookedinController(AppUserRepository appUserRepository, UsersBooksRepository usersBooksRepository, ReviewRepository reviewRepository) {
     this.appUserRepository = appUserRepository;
+    this.usersBooksRepository = usersBooksRepository;
+    this.reviewRepository = reviewRepository;
   }
 
   @RequestMapping(value="/login")
@@ -43,6 +49,10 @@ public class BookedinController {
       }
 
       model.addAttribute("followers", profile.getFollowers().size());
+
+      model.addAttribute("library",usersBooksRepository.findByUser(profile));
+
+      model.addAttribute("reviews", reviewRepository.findByUser(profile));
 
       AppUser user = appUserRepository.findByUsernameIgnoreCase(authentication.getName());
       model.addAttribute("user", user);
