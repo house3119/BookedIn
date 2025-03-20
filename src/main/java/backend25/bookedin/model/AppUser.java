@@ -25,7 +25,7 @@ public class AppUser {
 
   @NotEmpty(message = "Username is mandatory")
   @Size(max = 100, message = "Username can be max 100 characters long")
-  @Column(name = "username", nullable = false, updatable = false)
+  @Column(name = "username", nullable = false, updatable = false, unique = true)
   private String username;
 
   @Size(max = 200, message = "Avatar URL can be max 200 characters long")
