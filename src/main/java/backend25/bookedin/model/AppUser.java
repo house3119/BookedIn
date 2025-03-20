@@ -1,5 +1,7 @@
 package backend25.bookedin.model;
 
+import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 import jakarta.persistence.Column;
@@ -12,6 +14,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 @Entity
@@ -48,11 +51,23 @@ public class AppUser {
   @JoinColumn(name = "account_type_id")
   private AccountType account_type;
 
+  @NotNull(message = "Date joined is required")
+  @Column(name = "date_joined", nullable = false, updatable = false)
+  private LocalDate date_joined;
+
   @ManyToMany
   Set<AppUser> followers;
 
   @ManyToMany
   Set<AppUser> following;
+
+  public LocalDate getDate_joined() {
+    return date_joined;
+  }
+
+  public void setDate_joined(LocalDate date_joined) {
+    this.date_joined = date_joined;
+  }
 
   public Set<AppUser> getFollowers() {
     return followers;
@@ -72,11 +87,20 @@ public class AppUser {
 
   public AppUser() { }
 
+
+
+
   public AppUser(
       @NotEmpty(message = "Username is mandatory") @Size(max = 100, message = "Username can be max 100 characters long") String username,
-      @NotEmpty(message = "Password hash is mandatory") @Size(max = 60) String password_hash) {
+      @NotEmpty(message = "Password hash is mandatory") @Size(max = 60) String password_hash,
+      AccountType account_type) {
     this.username = username;
     this.password_hash = password_hash;
+    this.account_type = account_type;
+    this.followers = new HashSet<AppUser>();
+    this.following = new HashSet<AppUser>();
+    this.avatar_url = "";
+    this.date_joined = LocalDate.now();
   }
 
   public AppUser(
@@ -90,6 +114,7 @@ public class AppUser {
     this.country = country;
     this.age = age;
     this.account_type = account_type;
+    this.date_joined = LocalDate.now();
   }
 
   public AppUser(
@@ -105,6 +130,7 @@ public class AppUser {
     this.account_type = account_type;
     this.followers = followers;
     this.following = following;
+    this.date_joined = LocalDate.now();
   }
 
   public Long getUser_id() {

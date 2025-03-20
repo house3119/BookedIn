@@ -65,8 +65,8 @@ public class BookedinApplication {
 
 			log.info("Add some users to db...");
 			AppUser user1 = new AppUser(
-				"Bilbo",
-				"https://static.wikia.nocookie.net/peter-jacksons-the-lord-of-the-rings-trilogy/images/f/ff/Hudfzq7jltpvuhft.jpg/revision/latest?cb=20160618134352", "$2a$06$3jYRJrg0ghaaypjZ/.g4SethoeA51ph3UD4kZi9oPkeMTpjKU5uo6",
+				"BilBo",
+				"https://static.wikia.nocookie.net/peter-jacksons-the-lord-of-the-rings-trilogy/images/f/ff/Hudfzq7jltpvuhft.jpg", "$2a$06$3jYRJrg0ghaaypjZ/.g4SethoeA51ph3UD4kZi9oPkeMTpjKU5uo6",
 				countryRepository.findByName("Sweden"),
 				1969,
 				accountTypeRepository.findByType("USER"),
@@ -75,7 +75,7 @@ public class BookedinApplication {
 			);
 			AppUser user2 = new AppUser(
 				"Frodo",
-				"https://static.wikia.nocookie.net/pjmidearthfilms/images/3/34/Frodo.jpg/revision/latest?cb=20200725035857",
+				"https://static.wikia.nocookie.net/pjmidearthfilms/images/3/34/Frodo.jpg",
 				"$2a$10$0MMwY.IQqpsVc1jC8u7IJ.2rT8b0Cd3b3sfIBGV2zfgnPGtT4r0.C",
 				countryRepository.findByName("Finland"),
 				1988,
@@ -93,9 +93,15 @@ public class BookedinApplication {
 				new HashSet<AppUser>(),
 				new HashSet<AppUser>()
 			);
+			AppUser user4 = new AppUser(
+				"gollum",
+				"$2a$06$3jYRJrg0ghaaypjZ/.g4SethoeA51ph3UD4kZi9oPkeMTpjKU5uo6",
+				accountTypeRepository.findByType("USER")
+			);
 			appUserRepository.save(user1);
 			appUserRepository.save(user2);
 			appUserRepository.save(user3);
+			appUserRepository.save(user4);
 
 
 			log.info("Bilbo follows Frodo and Gandalf...");
