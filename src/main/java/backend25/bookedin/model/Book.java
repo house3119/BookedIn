@@ -39,7 +39,7 @@ public class Book {
   private String description;
 
   @NotEmpty(message = "ISBN is required")
-  @Size(max = 13, message = "Max 13 characters")
+  @Size(max = 18, message = "Max 18 characters")
   @Column(name = "isbn", nullable = false, unique = true)
   private String isbn;
 

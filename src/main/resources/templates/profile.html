@@ -9,6 +9,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link type="text/css" rel="stylesheet" href="/css/styles.css" th:href="@{/css/styles.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light" style="border-bottom: 1px solid rgb(235, 235, 235);" th:object="${user}">
@@ -50,25 +51,90 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
         </div>
 
         <div class="row">
-          <div class="col-6">
+          <div class="col-12">
             <h2>Library</h2>
-            <table class="table-striped" th:if="${library.size() != 0}">
-              <tr>
-                <th>Title</th>
-                <th>Author</th>
-              </tr>
-              <tr th:each="usersBook, iter: ${library}">
-                <td th:text="${usersBook.book.title}"></td>
-                <td th:text="${usersBook.book.author}"></td>
-              </tr>
-            </table>
+
+            <div th:if="${library.size() != 0}">
+              <div th:each="usersBook, iter: ${library}">
+                <div class="card mb-3" style="width: 100%;">
+                  <div class="card-body container">
+                    <div class="row">
+                      <div class="col-10">
+                        <h5 class="card-title" th:text="${usersBook.book.title}"></h5>
+                        <h6 th:text="${usersBook.book.author}"></h6>
+                        <h6 th:text="${usersBook.book.published_year}"></h6>
+                        <p><b>Reading Status: </b>
+                            <th:block th:switch="${usersBook.reading_status}">
+                                <span th:case="'Finished'" th:text="${usersBook.reading_status}" class="text-success"></span>
+                                <span th:case="'Wishlist'" th:text="${usersBook.reading_status}" class="text-danger"></span>
+                                <span th:case="'Currently reading'" th:text="${usersBook.reading_status}" class="text-warning"></span>
+                                <span th:case="*" th:text="${usersBook.reading_status}" class="text-success"></span>
+                            </th:block>
+                        </p>
+                        <p th:if="${usersBook.reading_status == 'Finished'}">
+                          <b>Review:
+                            <span th:each="i : ${#numbers.sequence(1, usersBook.review?.rating)}" class="fa fa-star checked"></span>
+                            <span th:if="${usersBook.review?.rating != 5}" th:each="i : ${#numbers.sequence(1, 5 - usersBook.review?.rating)}" class="fa fa-star"></span>
+                          </b>
+                          <div th:if="${usersBook.reading_status == 'Finished' && usersBook.review == null}"> No review yet...</div>
+                          <div th:unless="${usersBook.reading_status == 'Finished' && usersBook.review == null}">
+                            <p class="card-text" th:text="${usersBook.review?.review_text}"></p>
+                          </div>
+                        </p>
+                      </div>
+                      <div class="col-2">
+                        <img th:src="${usersBook.book.img_link}" alt="" width="100%">
+                      </div>
+                    </div>
+                    <div class="accordion mt-2" id="accordionExample">
+                      <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" th:data-bs-target="${'#' + usersBook.usersBooks_id}" aria-expanded="false" th:aria-controls="${usersBook.usersBooks_id}">
+                            <b>Full information</b>
+                          </button>
+                        </h2>
+                        <div th:id="${usersBook.usersBooks_id}" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                          <div class="accordion-body">
+                            <div class="container">
+                              <div class="row">
+                                <div class="col-12">
+                                  <p th:text="${usersBook.book.description}"></p>
+                                </div>
+                              </div>
+
+                              <div class="row">
+                                <div class="col-4">
+                                  <b>Page Count</b>
+                                  <br>
+                                  <span th:text="${usersBook.book.page_count}"></span>
+                                </div>
+
+                                <div class="col-4">
+                                  <b>Language</b>
+                                  <br>
+                                  <span th:text="${usersBook.book.language}"></span>
+                                </div>
+
+                                <div class="col-4">
+                                  <b>ISBN</b>
+                                  <br>
+                                  <span th:text="${usersBook.book.isbn}"></span>
+                                </div>
+
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div> 
+                  </div>
+                </div>
+              </div>
+            </div>
             <p th:unless="${library.size() != 0}">No books yet..</p>
+
           </div>
-          <div class="col-6">
-            <h2>Reviews</h2>
-          </div>
-        </div>
-         
+        </div>       
       </div>
     </main>
 

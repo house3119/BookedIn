@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
@@ -35,7 +36,31 @@ public class UsersBooks {
   @Column(name = "date_added", nullable = false, updatable = false)
   private LocalDate dateAdded;
 
+  @NotNull(message = "Required")
+  @Column(name = "reading_status")
+  private String reading_status;
+
+  @OneToOne
+  @JoinColumn(name = "review_id")
+  private Review review;
+
   public UsersBooks() {
+  }
+
+  public String getReading_status() {
+    return reading_status;
+  }
+
+  public void setReading_status(String reading_status) {
+    this.reading_status = reading_status;
+  }
+
+  public Review getReview() {
+    return review;
+  }
+
+  public void setReview(Review review) {
+    this.review = review;
   }
 
   public UsersBooks(@NotNull(message = "User is required") AppUser user,
@@ -43,6 +68,16 @@ public class UsersBooks {
     this.user = user;
     this.book = book;
     this.dateAdded = dateAdded;
+    this.reading_status = "Wishlist";
+  }
+
+  public UsersBooks(@NotNull(message = "User is required") AppUser user,
+      @NotNull(message = "Book is required") Book book, @NotNull(message = "Date is required") LocalDate dateAdded,
+      @NotNull(message = "Required") String reading_status) {
+    this.user = user;
+    this.book = book;
+    this.dateAdded = dateAdded;
+    this.reading_status = reading_status;
   }
 
   public Long getUsersBooks_id() {

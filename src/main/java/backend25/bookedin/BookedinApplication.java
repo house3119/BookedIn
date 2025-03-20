@@ -135,17 +135,35 @@ public class BookedinApplication {
 				"English",
 				"https://upload.wikimedia.org/wikipedia/en/a/a9/Harry_Potter_and_the_Deathly_Hallows.jpg"
 			);
+			Book book3 = new Book(
+				"Spring Boot 3.0 Cookbook:",
+				"F. M. Puig",
+				2024,
+				"In today's dynamic landscape, crafting robust and scalable Java web applications presents formidable challenges. Spring Boot emerges as the leading framework for web and microservices development, featuring a dynamic ecosystem and seamless integrations to address a spectrum of scenarios, from scaling apps on the cloud to deploying them to production. In this book, you’ll explore its streamlined, convention-over-configuration approach, simplifying application development.",
+				"978-1835089491",
+				436,
+				"English",
+				"https://m.media-amazon.com/images/I/71jwSWY-VEL._SY522_.jpg"
+			);
 			bookRepository.save(book1);
 			bookRepository.save(book2);
+			bookRepository.save(book3);
 
 
 			log.info("Add a book to user...");
-			usersBooksRepository.save(new UsersBooks(user2, book1, LocalDate.now()));
-			usersBooksRepository.save(new UsersBooks(user2, book2, LocalDate.now()));
+			UsersBooks usersBook1 = new UsersBooks(user2, book1, LocalDate.now(), "Finished");
+			UsersBooks usersBook2 = new UsersBooks(user2, book2, LocalDate.now());
+			usersBooksRepository.save(usersBook1);
+			usersBooksRepository.save(usersBook2);
 
+			usersBooksRepository.save(new UsersBooks(user4, book3, LocalDate.now(), "Currently reading"));
 
-			log.info("Add review for previous book...");
-			reviewRepository.save(new Review(user2, book1, LocalDate.now(), "Very good! Snape is the best!", 5));
+			log.info("Add review for a book...");
+			Review review = new Review("Hyvä oli", 5, usersBook1);
+			reviewRepository.save(review);
+			usersBook1.setReview(review);
+			usersBooksRepository.save(usersBook1);
+
 
 		};
 

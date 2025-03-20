@@ -52,8 +52,6 @@ public class BookedinController {
 
       model.addAttribute("library",usersBooksRepository.findByUser(profile));
 
-      model.addAttribute("reviews", reviewRepository.findByUser(profile));
-
       AppUser user = appUserRepository.findByUsernameIgnoreCase(authentication.getName());
       model.addAttribute("user", user);
 
