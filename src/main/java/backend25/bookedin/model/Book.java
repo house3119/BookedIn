@@ -22,7 +22,7 @@ public class Book {
 
   @NotEmpty(message = "Title is required")
   @Size(max = 100, message = "Max 100 characters")
-  @Column(name = "title", nullable = false, unique = true)
+  @Column(name = "title", nullable = false)
   private String title;
 
   @NotEmpty(message = "Author is required")

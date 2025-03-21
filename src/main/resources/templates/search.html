@@ -33,10 +33,219 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
     </nav>
 
     <main>
-      <div class="container text-center py-5">
-         <h1>Search</h1>  
+      <div class="container py-5" >
+        <div class="container text-center" id="book-search-container">
+          <h1>Search</h1>
+          <p>Search for books by title, author, isbn etc.</p>
+         <input type="text" id="book-search-input" class="form-control" style="width: 40em; margin-left: auto; margin-right: auto;">
+         <br>
+         <button class="btn btn-primary" id="book-search-button" aria-placeholder="">Search</button>
+        </div>
+
+        <div class="container py-3" id="result-container">
+          <div class="row">
+            <p id="result-amount-p"></p>
+          </div>
+
+        </div>
+
       </div>
     </main>
+
+    <script>
+
+      document.addEventListener("DOMContentLoaded", () => {
+
+
+
+        const searchButton = document.getElementById('book-search-button');
+        const searchField = document.getElementById('book-search-input');
+        const resultContainer = document.getElementById('result-container');
+        let searchResults;
+        let resultContainer2;
+
+        searchButton.addEventListener('click', async () => {
+          await searchBooks();
+
+          document.getElementById('result-amount-p').innerHTML = '';
+
+          if (searchResults.items && resultContainer2) {
+              while (resultContainer2.firstChild) {
+                resultContainer2.removeChild(resultContainer2.lastChild);
+            }
+          }
+     
+          if (searchResults.items) {
+            document.getElementById('result-amount-p').innerHTML = `Showing ${searchResults.items.length} of total ${searchResults.totalItems} results.`;
+
+            resultContainer2 = document.createElement('div');
+            resultContainer2.classList = 'container';
+            resultContainer2.id = 'result-container-2';
+            resultContainer.appendChild(resultContainer2);
+
+            searchResults.items.forEach(item => {
+              console.log(item);
+
+              const card = document.createElement('div');
+              card.classList = 'card mb-3';
+              card.style = 'width: 100%'
+              resultContainer2.appendChild(card);
+
+              const cardBody = document.createElement('div');
+              cardBody.classList = 'card-body container';
+              card.appendChild(cardBody);
+
+              const row = document.createElement('div');
+              row.classList = 'row';
+              cardBody.appendChild(row);
+
+              const col10 = document.createElement('div');
+              col10.classList = 'col-10';
+              row.appendChild(col10);
+
+              const cardTitle = document.createElement('h5');
+              cardTitle.classList = 'card-title';
+              cardTitle.innerHTML = item.volumeInfo.title;
+              col10.appendChild(cardTitle);
+
+              const authorTitle = document.createElement('h6');
+              authorTitle.innerHTML = item.volumeInfo.authors[0];
+              col10.appendChild(authorTitle);
+
+              const pubYearTitle = document.createElement('h6');
+              if (item.volumeInfo.publishedDate && item.volumeInfo.publishedDate.length > 4) {
+                pubYearTitle.innerHTML = item.volumeInfo.publishedDate.substring(0,4);
+              } else if (item.volumeInfo.publishedDate) {
+                pubYearTitle.innerHTML = item.volumeInfo.publishedDate;
+              } else {
+                pubYearTitle.innerHTML = 'Publication year unknown';
+              }
+              col10.appendChild(pubYearTitle);
+
+              const paragraph = document.createElement('p');
+              if (item.volumeInfo.description) {
+                paragraph.innerHTML = item.volumeInfo.description;
+              } else {
+                paragraph.innerHTML = 'No description available';
+              }
+              col10.appendChild(paragraph);
+
+              const col2 = document.createElement('div');
+              col2.classList = 'col-2';
+              row.appendChild(col2);
+
+              const bookImg = document.createElement('img');
+              if (item.volumeInfo.imageLinks && item.volumeInfo.imageLinks.thumbnail) {
+                bookImg.src = item.volumeInfo.imageLinks.thumbnail;
+              } else {
+                bookImg.src = 'https://www.secondhandbooksindia.com/img/not-found.jpg';
+              }
+              bookImg.style = 'width: 100%'
+              col2.appendChild(bookImg);
+
+              const row2 = document.createElement('div');
+              row2.classList = 'row';
+              cardBody.appendChild(row2);
+
+              const col4 = document.createElement('div');
+              col4.classList = 'col-4';
+              row2.appendChild(col4);
+
+              const pageCountB = document.createElement('b');
+              pageCountB.innerHTML = 'Page Count';
+              col4.appendChild(pageCountB);
+
+              col4.appendChild(document.createElement('br'));
+
+              const pageSpan = document.createElement('span');
+              if (item.volumeInfo.pageCount && item.volumeInfo.pageCount > 0) {
+                pageSpan.innerHTML = item.volumeInfo.pageCount;
+              } else {
+                pageSpan.innerHTML = 'unknown'
+              }
+              col4.appendChild(pageSpan);
+
+              const col4_1 = document.createElement('div');
+              col4_1.classList = 'col-4';
+              row2.appendChild(col4_1);
+
+              const langB = document.createElement('b');
+              langB.innerHTML = 'Language';
+              col4_1.appendChild(langB);
+
+              col4_1.appendChild(document.createElement('br'));
+
+              const langSpan = document.createElement('span');
+              if (item.volumeInfo.language) {
+                langSpan.innerHTML = item.volumeInfo.language;
+              } else {
+                langSpan.innerHTML = 'unknown'
+              }
+              col4_1.appendChild(langSpan);
+
+              const col4_2 = document.createElement('div');
+              col4_2.classList = 'col-4';
+              row2.appendChild(col4_2);
+
+              const isbnB = document.createElement('b');
+              isbnB.innerHTML = 'ISBN';
+              col4_2.appendChild(isbnB);
+
+              col4_2.appendChild(document.createElement('br'));
+
+              const isbnSpan = document.createElement('span');
+              if (item.volumeInfo.industryIdentifiers[0]) {
+                isbnSpan.innerHTML = item.volumeInfo.industryIdentifiers[0].identifier;
+              } else {
+                isbnSpan.innerHTML = 'unknown'
+              }
+              col4_2.appendChild(isbnSpan);
+
+              const row3 = document.createElement('div');
+              row3.classList = 'row';
+              cardBody.appendChild(row3);
+
+              const col12 = document.createElement('div');
+              col12.classList = 'col-12 mt-2';
+              row3.appendChild(col12);
+
+              const addBtn = document.createElement('button');
+              addBtn.classList = 'btn btn-primary';
+              addBtn.innerHTML = 'Add to Library';
+              addBtn.id = item.id;
+              col12.appendChild(addBtn);
+              
+
+            });
+          } else {
+            document.getElementById('result-amount-p').innerHTML = 'No results';
+          }
+
+
+        })
+
+        const searchBooks = async () => {
+          const url = `https://www.googleapis.com/books/v1/volumes?q=${searchField.value}&langRestrict=en`;
+          try {
+            const response = await fetch(url);
+            if (!response.ok) {
+              throw new Error(`Response status: ${response.status}`);
+            }
+
+            searchResults = await response.json();
+            console.log(searchResults);
+          } catch (error) {
+            console.error(error.message);
+          }
+        }
+
+
+
+
+      })
+
+
+    </script>
 
   </body>
 </html>

@@ -1,6 +1,7 @@
 package backend25.bookedin.web;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import backend25.bookedin.model.AppUser;
 import backend25.bookedin.model.AppUserRepository;
 import backend25.bookedin.model.ReviewRepository;
+import backend25.bookedin.model.UsersBooks;
 import backend25.bookedin.model.UsersBooksRepository;
 
 
@@ -65,6 +67,8 @@ public class BookedinController {
   public String getSearch(Authentication authentication, Model model) {
     AppUser user = appUserRepository.findByUsernameIgnoreCase(authentication.getName());
     model.addAttribute("user", user);
+    List<UsersBooks> usersBooks = usersBooksRepository.findByUser(user);
+    model.addAttribute("usersBooks", usersBooks);
     return "search";
   }
 
