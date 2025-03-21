@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface UsersBooksRepository extends CrudRepository<UsersBooks, Long> {
   List<UsersBooks> findByUser(AppUser user);
+  List<UsersBooks> findByBook(Book book);
 }

@@ -27,7 +27,8 @@ public class WebSecurityConfig {
 	}
 
 	private static final AntPathRequestMatcher[] WHITE_LIST_URLS = {
-		new AntPathRequestMatcher("/h2-console/**")
+		new AntPathRequestMatcher("/h2-console/**"),
+		new AntPathRequestMatcher("/api/**")
 	};
 
 	@Bean
@@ -40,7 +41,7 @@ public class WebSecurityConfig {
 				.anyRequest().authenticated())
 				.headers(headers -> headers.frameOptions(frameOptions -> frameOptions .disable())) // for h2console
 				.formLogin(formlogin -> formlogin.loginPage("/login")
-					.defaultSuccessUrl("/booklist", true)
+					.defaultSuccessUrl("/index", true)
 					.permitAll())
 				.logout(logout -> logout.permitAll())
 				.csrf(csrf -> csrf.disable()); // not for production, just for development

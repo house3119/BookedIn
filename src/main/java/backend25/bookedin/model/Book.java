@@ -32,7 +32,7 @@ public class Book {
 
   @NotNull(message = "Published year is required")
   @Column(name = "published", nullable = false)
-  private int published_year;
+  private String published_year;
 
   @Size(max = 3000, message = "Max 3000 characters")
   @Column(name = "description", nullable = false)
@@ -61,7 +61,7 @@ public class Book {
 
   public Book(@NotEmpty(message = "Title is required") @Size(max = 100, message = "Max 100 characters") String title,
       @NotEmpty(message = "Author is required") @Size(max = 100, message = "Max 100 characters") String author,
-      @NotNull(message = "Published year is required") int published_year,
+      @NotNull(message = "Published year is required") @NotNull(message = "Published year is required") String published_year,
       @NotEmpty(message = "ISBN is required") @Size(max = 13, message = "Max 13 characters") String isbn,
       @NotNull(message = "Page count is required") @Min(1) int page_count,
       @NotEmpty(message = "Language is required") String language) {
@@ -75,7 +75,7 @@ public class Book {
 
   public Book(@NotEmpty(message = "Title is required") @Size(max = 100, message = "Max 100 characters") String title,
       @NotEmpty(message = "Author is required") @Size(max = 100, message = "Max 100 characters") String author,
-      @NotNull(message = "Published year is required") int published_year,
+      @NotNull(message = "Published year is required") @NotNull(message = "Published year is required") String published_year,
       @Size(max = 3000, message = "Max 3000 characters") String description,
       @NotEmpty(message = "ISBN is required") @Size(max = 13, message = "Max 13 characters") String isbn,
       @NotNull(message = "Page count is required") @Min(1) int page_count,
@@ -115,11 +115,11 @@ public class Book {
     this.author = author;
   }
 
-  public int getPublished_year() {
+  public @NotNull(message = "Published year is required") String getPublished_year() {
     return published_year;
   }
 
-  public void setPublished_year(int published_year) {
+  public void setPublished_year(@NotNull(message = "Published year is required") String published_year) {
     this.published_year = published_year;
   }
 

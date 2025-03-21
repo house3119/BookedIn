@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -56,9 +58,11 @@ public class AppUser {
   private LocalDate date_joined;
 
   @ManyToMany
+  @JsonIgnore
   Set<AppUser> followers;
 
   @ManyToMany
+  @JsonIgnore
   Set<AppUser> following;
 
   public LocalDate getDate_joined() {

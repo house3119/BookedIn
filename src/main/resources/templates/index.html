@@ -26,7 +26,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
           </li>
         </ul>
       </div>
-      <span style="margin-left: auto; margin-right: 25px;">Signed in as <b><span th:text="${user.username}"></span></span></b>
+      <span style="margin-left: auto; margin-right: 25px;">Signed in as <b><a th:href="'/users/' + ${user.username}"><span th:text="${user.username}"></span></a></span></b>
       <form th:action="@{/logout}" method="post">
         <input type="submit" value="Sign Out" class="btn btn-sm btn-danger me-2"/>
       </form>

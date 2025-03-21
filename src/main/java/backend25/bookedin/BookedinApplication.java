@@ -118,7 +118,7 @@ public class BookedinApplication {
 			Book book1 = new Book(
 				"Harry Potter and the Half-Blood Prince",
 				"J.K. Rowling",
-				2005,
+				"2005",
 				"Harry Potter and the Half-Blood Prince is a fantasy novel written by British author J. K. Rowling. It is the sixth and penultimate novel in the Harry Potter series, and takes place during Harry Potter's sixth year at the wizard school Hogwarts. The novel reveals events from the early life of Lord Voldemort, and chronicles Harry's preparations for the final battle against him.",
 				"0-7475-8108-8",
 				607,
@@ -128,7 +128,7 @@ public class BookedinApplication {
 			Book book2 = new Book(
 				"Harry Potter and the Deathy Hallows",
 				"J.K. Rowling",
-				2007,
+				"2007",
 				"Harry Potter and the Deathly Hallows is a fantasy novel written by British author J. K. Rowling. It is the seventh and final novel in the Harry Potter series. It was released on 21 July 2007 in the United Kingdom by Bloomsbury Publishing, in the United States by Scholastic, and in Canada by Raincoast Books. The novel chronicles the events directly following Harry Potter and the Half-Blood Prince (2005) and the final confrontation between the wizards Harry Potter and Lord Voldemort.",
 				"0-7475-9105-9",
 				607,
@@ -138,7 +138,7 @@ public class BookedinApplication {
 			Book book3 = new Book(
 				"Spring Boot 3.0 Cookbook:",
 				"F. M. Puig",
-				2024,
+				"2024",
 				"In today's dynamic landscape, crafting robust and scalable Java web applications presents formidable challenges. Spring Boot emerges as the leading framework for web and microservices development, featuring a dynamic ecosystem and seamless integrations to address a spectrum of scenarios, from scaling apps on the cloud to deploying them to production. In this book, you’ll explore its streamlined, convention-over-configuration approach, simplifying application development.",
 				"978-1835089491",
 				436,

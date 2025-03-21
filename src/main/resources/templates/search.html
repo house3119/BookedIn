@@ -26,7 +26,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
           </li>
         </ul>
       </div>
-      <span style="margin-left: auto; margin-right: 25px;">Signed in as <b><span th:text="${user.username}"></span></span></b>
+      <span style="margin-left: auto; margin-right: 25px;">Signed in as <b><a th:href="'/users/' + ${user.username}"><span th:text="${user.username}"></span></a></span></b>
       <form th:action="@{/logout}" method="post">
         <input type="submit" value="Sign Out" class="btn btn-sm btn-danger me-2"/>
       </form>
@@ -55,26 +55,29 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
     <script>
 
       document.addEventListener("DOMContentLoaded", () => {
-
-
-
         const searchButton = document.getElementById('book-search-button');
         const searchField = document.getElementById('book-search-input');
         const resultContainer = document.getElementById('result-container');
+        const apiBaseUrl = 'http://localhost:8080/api';
+
         let searchResults;
         let resultContainer2;
 
+        // Search button event listener
         searchButton.addEventListener('click', async () => {
+
+          // Send request to Google Books API
           await searchBooks();
 
+          // If already old search results on page --> Clean them
           document.getElementById('result-amount-p').innerHTML = '';
-
           if (searchResults.items && resultContainer2) {
               while (resultContainer2.firstChild) {
                 resultContainer2.removeChild(resultContainer2.lastChild);
             }
           }
-     
+          
+          // Build search results
           if (searchResults.items) {
             document.getElementById('result-amount-p').innerHTML = `Showing ${searchResults.items.length} of total ${searchResults.totalItems} results.`;
 
@@ -83,6 +86,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
             resultContainer2.id = 'result-container-2';
             resultContainer.appendChild(resultContainer2);
 
+            // Build card for each book
             searchResults.items.forEach(item => {
               console.log(item);
 
@@ -103,15 +107,18 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
               col10.classList = 'col-10';
               row.appendChild(col10);
 
+              // Title
               const cardTitle = document.createElement('h5');
               cardTitle.classList = 'card-title';
               cardTitle.innerHTML = item.volumeInfo.title;
               col10.appendChild(cardTitle);
 
+              // Author
               const authorTitle = document.createElement('h6');
               authorTitle.innerHTML = item.volumeInfo.authors[0];
               col10.appendChild(authorTitle);
 
+              // Publication Year
               const pubYearTitle = document.createElement('h6');
               if (item.volumeInfo.publishedDate && item.volumeInfo.publishedDate.length > 4) {
                 pubYearTitle.innerHTML = item.volumeInfo.publishedDate.substring(0,4);
@@ -122,6 +129,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
               }
               col10.appendChild(pubYearTitle);
 
+              // Description
               const paragraph = document.createElement('p');
               if (item.volumeInfo.description) {
                 paragraph.innerHTML = item.volumeInfo.description;
@@ -134,6 +142,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
               col2.classList = 'col-2';
               row.appendChild(col2);
 
+              // Image
               const bookImg = document.createElement('img');
               if (item.volumeInfo.imageLinks && item.volumeInfo.imageLinks.thumbnail) {
                 bookImg.src = item.volumeInfo.imageLinks.thumbnail;
@@ -151,6 +160,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
               col4.classList = 'col-4';
               row2.appendChild(col4);
 
+              // Page count
               const pageCountB = document.createElement('b');
               pageCountB.innerHTML = 'Page Count';
               col4.appendChild(pageCountB);
@@ -169,6 +179,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
               col4_1.classList = 'col-4';
               row2.appendChild(col4_1);
 
+              // Language
               const langB = document.createElement('b');
               langB.innerHTML = 'Language';
               col4_1.appendChild(langB);
@@ -187,6 +198,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
               col4_2.classList = 'col-4';
               row2.appendChild(col4_2);
 
+              // ISBN
               const isbnB = document.createElement('b');
               isbnB.innerHTML = 'ISBN';
               col4_2.appendChild(isbnB);
@@ -209,21 +221,103 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
               col12.classList = 'col-12 mt-2';
               row3.appendChild(col12);
 
+              // Add to library button
               const addBtn = document.createElement('button');
               addBtn.classList = 'btn btn-primary';
               addBtn.innerHTML = 'Add to Library';
               addBtn.id = item.id;
+              addBtn.addEventListener('click', async () => {
+                await addBookToDb(item);
+                await addBookToUsersBooks(item);
+
+                addBtn.innerHTML = 'Added';
+                addBtn.disabled = true;
+              });
               col12.appendChild(addBtn);
-              
 
             });
           } else {
             document.getElementById('result-amount-p').innerHTML = 'No results';
           }
-
-
         })
 
+
+        // Add book to database
+        const addBookToDb = async (item) => {
+          const url = `${apiBaseUrl}/books`;
+          let parsedYear;
+
+          if (item.volumeInfo.publishedDate && item.volumeInfo.publishedDate.length > 4) {
+            parsedYear = item.volumeInfo.publishedDate.substring(0,4);
+          } else if (item.volumeInfo.publishedDate) {
+            parsedYear = item.volumeInfo.publishedDate;
+          } else {
+            parsedYear = 'unknown';
+          }
+
+          try {
+            const response = await fetch(url, {
+              method: "POST",
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                title: item.volumeInfo.title,
+                author: item.volumeInfo.authors[0],
+                published_year: parsedYear,
+                description: item.volumeInfo.description,
+                isbn: item.volumeInfo.industryIdentifiers[0].identifier,
+                page_count: item.volumeInfo.pageCount,
+                language: item.volumeInfo.language,
+                img_link: item.volumeInfo.imageLinks.thumbnail
+              })
+            });
+
+            if (!response.ok) {
+              throw new Error(`Response status: ${response.status}`);
+            }
+
+            const result = await response.json();
+          } catch (error) {
+            console.error(error.message);
+          }
+
+        }
+
+
+        // Add book to logged-in users library
+        const addBookToUsersBooks = async (item) => {
+          const url = `${apiBaseUrl}/usersbooks`;
+          const isbn = item.volumeInfo.industryIdentifiers[0].identifier;
+          const user = "[[${user.username}]]"
+
+          try {
+            const response = await fetch(url, {
+              method: "POST",
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                username: user,
+                isbn: isbn
+              })
+            });
+
+            if (!response.ok) {
+              throw new Error(`Response status: ${response.status}`);
+            }
+
+            const result = await response.json();
+          } catch (error) {
+            console.error(error.message);
+          }
+
+        }
+
+
+        // Search books from Google Books API
         const searchBooks = async () => {
           const url = `https://www.googleapis.com/books/v1/volumes?q=${searchField.value}&langRestrict=en`;
           try {
@@ -238,9 +332,6 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
             console.error(error.message);
           }
         }
-
-
-
 
       })
 

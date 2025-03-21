@@ -68,7 +68,7 @@ public class UsersBooks {
     this.user = user;
     this.book = book;
     this.dateAdded = dateAdded;
-    this.reading_status = "Wishlist";
+    this.reading_status = "No status";
   }
 
   public UsersBooks(@NotNull(message = "User is required") AppUser user,

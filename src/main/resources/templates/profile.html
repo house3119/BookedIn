@@ -28,7 +28,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
           </li>
         </ul>
       </div>
-      <span style="margin-left: auto; margin-right: 25px;">Signed in as <b><span th:text="${user.username}"></span></span></b>
+      <span style="margin-left: auto; margin-right: 25px;">Signed in as <b><a th:href="'/users/' + ${user.username}"><span th:text="${user.username}"></span></a></span></b>
       <form th:action="@{/logout}" method="post">
         <input type="submit" value="Sign Out" class="btn btn-sm btn-danger me-2"/>
       </form>
@@ -65,6 +65,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                         <h6 th:text="${usersBook.book.published_year}"></h6>
                         <p><b>Reading Status: </b>
                             <th:block th:switch="${usersBook.reading_status}">
+                                <span th:case="'No status'" th:text="${usersBook.reading_status}" class="text-secondary"></span>
                                 <span th:case="'Finished'" th:text="${usersBook.reading_status}" class="text-success"></span>
                                 <span th:case="'Wishlist'" th:text="${usersBook.reading_status}" class="text-danger"></span>
                                 <span th:case="'Currently reading'" th:text="${usersBook.reading_status}" class="text-warning"></span>
