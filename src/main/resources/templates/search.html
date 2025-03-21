@@ -8,6 +8,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
     <link rel="icon" href="./favicon.ico" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link type="text/css" rel="stylesheet" href="/css/styles.css" th:href="@{/css/styles.css}"/>
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light" style="border-bottom: 1px solid rgb(235, 235, 235);" th:object="${user}">
@@ -25,6 +26,12 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
             <a class="nav-link active" href="/search">Search</a>
           </li>
         </ul>
+        <!--
+        <form class="d-flex" role="search" style="margin-left: auto; margin-right: auto;">
+          <input class="form-control me-2" type="search" placeholder="Search users" aria-label="Search" id="user-search-input">
+          <button class="btn btn-outline-success" type="submit" onclick="userSearch(event)">Search</button>
+        </form>
+        -->
       </div>
       <span style="margin-left: auto; margin-right: 25px;">Signed in as <b><a th:href="'/users/' + ${user.username}"><span th:text="${user.username}"></span></a></span></b>
       <form th:action="@{/logout}" method="post">
@@ -39,7 +46,10 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
           <p>Search for books by title, author, isbn etc.</p>
          <input type="text" id="book-search-input" class="form-control" style="width: 40em; margin-left: auto; margin-right: auto;">
          <br>
-         <button class="btn btn-primary" id="book-search-button" aria-placeholder="">Search</button>
+         <button class="btn btn-primary" id="book-search-button" aria-placeholder="" style="width: 5em;">Search</button>
+         <button class="btn btn-primary display-none" type="button" disabled style="width: 5em;" id="book-search-spinner">
+          <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+          </button>
         </div>
 
         <div class="container py-3" id="result-container">
@@ -56,6 +66,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 
       document.addEventListener("DOMContentLoaded", () => {
         const searchButton = document.getElementById('book-search-button');
+        const searchSpinner = document.getElementById('book-search-spinner');
         const searchField = document.getElementById('book-search-input');
         const resultContainer = document.getElementById('result-container');
         const apiBaseUrl = 'http://localhost:8080/api';
@@ -320,8 +331,16 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
         // Search books from Google Books API
         const searchBooks = async () => {
           const url = `https://www.googleapis.com/books/v1/volumes?q=${searchField.value}&langRestrict=en`;
+
+          searchButton.classList.add('display-none');
+          searchSpinner.classList.remove('display-none');
+
           try {
             const response = await fetch(url);
+
+            searchSpinner.classList.add('display-none');
+            searchButton.classList.remove('display-none');
+
             if (!response.ok) {
               throw new Error(`Response status: ${response.status}`);
             }
@@ -331,6 +350,11 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
           } catch (error) {
             console.error(error.message);
           }
+        }
+
+        const userSearch = (event) => {
+          event.preventDefault();
+          window.location.href = `/users/${document.getElementById('user-search-input').value}`;
         }
 
       })

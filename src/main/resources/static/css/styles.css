@@ -5,3 +5,7 @@
 .checked {
   color: orange;
 }
+
+.display-none {
+  display: none;
+}

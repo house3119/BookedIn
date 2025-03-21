@@ -27,6 +27,12 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
             <a class="nav-link" href="/search">Search</a>
           </li>
         </ul>
+        <!--
+        <form class="d-flex" role="search" style="margin-left: auto; margin-right: auto;">
+          <input class="form-control me-2" type="search" placeholder="Search users" aria-label="Search" id="user-search-input">
+          <button class="btn btn-outline-success" type="submit" onclick="userSearch(event)">Search</button>
+        </form>
+        -->
       </div>
       <span style="margin-left: auto; margin-right: 25px;">Signed in as <b><a th:href="'/users/' + ${user.username}"><span th:text="${user.username}"></span></a></span></b>
       <form th:action="@{/logout}" method="post">
@@ -138,6 +144,15 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
         </div>       
       </div>
     </main>
+
+    <script>
+
+      const userSearch = (event) => {
+        event.preventDefault();
+        window.location.href = `/users/${document.getElementById('user-search-input').value}`;
+      }
+
+    </script>
 
   </body>
 </html>
