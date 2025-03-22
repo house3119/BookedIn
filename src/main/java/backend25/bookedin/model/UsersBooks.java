@@ -2,6 +2,7 @@ package backend25.bookedin.model;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -40,7 +41,7 @@ public class UsersBooks {
   @Column(name = "reading_status")
   private String reading_status;
 
-  @OneToOne
+  @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "review_id")
   private Review review;
 

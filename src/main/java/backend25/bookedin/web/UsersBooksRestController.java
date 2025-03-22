@@ -13,8 +13,13 @@ import backend25.bookedin.model.AppUserRepository;
 import backend25.bookedin.model.Book;
 import backend25.bookedin.model.BookRepository;
 import backend25.bookedin.model.PostModelUsersBooks;
+import backend25.bookedin.model.Review;
+import backend25.bookedin.model.ReviewRepository;
 import backend25.bookedin.model.UsersBooks;
 import backend25.bookedin.model.UsersBooksRepository;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -30,6 +35,9 @@ public class UsersBooksRestController {
 
   @Autowired
   BookRepository bookRepository;
+
+  @Autowired
+  ReviewRepository reviewRepository;
 
   @PostMapping("api/usersbooks")
   public ResponseEntity<?> addUsersBook(@RequestBody PostModelUsersBooks newUsersBooks) {
@@ -47,6 +55,19 @@ public class UsersBooksRestController {
       return new ResponseEntity<UsersBooks>(newUb, HttpStatus.CREATED);
 
     } catch (Exception e) {
+      return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @DeleteMapping("api/usersbooks/{id}")
+  public ResponseEntity<?> deleteUsersBook(@PathVariable(required = true) Long id) {
+    try {
+      UsersBooks toBeDeleted = usersBooksRepository.findById(id).orElse(null);
+      usersBooksRepository.delete(toBeDeleted);
+
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+    } catch(Exception e) {
       return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
   }

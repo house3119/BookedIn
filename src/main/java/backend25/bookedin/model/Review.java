@@ -2,6 +2,7 @@ package backend25.bookedin.model;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Max;
@@ -42,10 +44,10 @@ public class Review {
   @Column(name = "rating", nullable = false, updatable = false)
   private int rating;
 
-  @NotNull(message = "Required")
+
   @OneToOne
   @JoinColumn(name = "usersBooks_id")
-  private UsersBooks users_books;
+  private UsersBooks usersBooks;
 
   public Review() {
   }
@@ -56,7 +58,7 @@ public class Review {
       @NotEmpty(message = "Required") UsersBooks users_books) {
     this.review_text = review_text;
     this.rating = rating;
-    this.users_books = users_books;
+    this.usersBooks = users_books;
     this.reviewAdded = LocalDate.now();
   }
 
@@ -93,17 +95,17 @@ public class Review {
   }
 
   public UsersBooks getUsers_books() {
-    return users_books;
+    return usersBooks;
   }
 
   public void setUsers_books(UsersBooks users_books) {
-    this.users_books = users_books;
+    this.usersBooks = users_books;
   }
 
   @Override
   public String toString() {
     return "Review [review_id=" + review_id + ", reviewAdded=" + reviewAdded + ", review_text=" + review_text
-        + ", rating=" + rating + ", users_books=" + users_books + "]";
+        + ", rating=" + rating + ", users_books=" + usersBooks + "]";
   }
 
 }

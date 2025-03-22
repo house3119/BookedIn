@@ -66,7 +66,11 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                   <div class="card-body container">
                     <div class="row">
                       <div class="col-10">
+                        <a class="btn btn-danger" style="float: right;" th:if="${usersBook.user.username == user.username}" th:id="${usersBook.usersBooks_id}" onclick="deleteUsersBook(event.target)">
+                          Remove
+                        </a>
                         <h5 class="card-title" th:text="${usersBook.book.title}"></h5>
+                        
                         <h6 th:text="${usersBook.book.author}"></h6>
                         <h6 th:text="${usersBook.book.published_year}"></h6>
                         <p><b>Reading Status: </b>
@@ -78,7 +82,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                                 <span th:case="*" th:text="${usersBook.reading_status}" class="text-success"></span>
                             </th:block>
                         </p>
-                        <p th:if="${usersBook.reading_status == 'Finished'}">
+                        <div th:if="${usersBook.reading_status == 'Finished'}">
                           <b>Review:
                             <span th:each="i : ${#numbers.sequence(1, usersBook.review?.rating)}" class="fa fa-star checked"></span>
                             <span th:if="${usersBook.review?.rating != 5}" th:each="i : ${#numbers.sequence(1, 5 - usersBook.review?.rating)}" class="fa fa-star"></span>
@@ -87,7 +91,8 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                           <div th:unless="${usersBook.reading_status == 'Finished' && usersBook.review == null}">
                             <p class="card-text" th:text="${usersBook.review?.review_text}"></p>
                           </div>
-                        </p>
+                        </div>
+                        
                       </div>
                       <div class="col-2">
                         <img th:src="${usersBook.book.img_link}" alt="" width="100%">
@@ -146,10 +151,27 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
     </main>
 
     <script>
+      const apiBaseUrl = 'http://localhost:8080/api';
 
       const userSearch = (event) => {
         event.preventDefault();
         window.location.href = `/users/${document.getElementById('user-search-input').value}`;
+      }
+
+      const deleteUsersBook = async (target) => {
+        const url = `${apiBaseUrl}/usersbooks/${target.id}`;
+
+        try {
+          const response = await fetch(url, { method: "DELETE"} );
+
+          if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+          }
+          window.location.href = '/users/' + "[[${user.username}]]";
+        } catch (error) {
+          console.error(error.message);
+        }
+
       }
 
     </script>
