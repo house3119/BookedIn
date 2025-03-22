@@ -66,13 +66,13 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                   <div class="card-body container">
                     <div class="row">
                       <div class="col-10">
-                        <button class="btn btn-danger" style="float: right;" th:if="${usersBook.user.username == user.username}" th:id="${usersBook.usersBooks_id}" onclick="deleteUsersBook(event.target)">
+                        <button class="btn btn-danger me-1" style="float: right;" th:if="${usersBook.user.username == user.username}" th:id="${usersBook.usersBooks_id}" onclick="deleteUsersBook(event.target)">
                           Remove Book
                         </button>
                         <button class="btn btn-primary me-2" style="float: right;" th:if="${usersBook.user.username == user.username && usersBook.review == null}" th:id="'show-review-form-' + ${usersBook.usersBooks_id}" th:value="${usersBook.usersBooks_id}" onclick="showReviewForm(event.target)">
                           Add Review
                         </button>
-                        <button class="btn btn-outline-primary me-2" style="float: right;" th:if="${usersBook.user.username == user.username && usersBook.review != null}" th:id="'edit-review-' + ${usersBook.usersBooks_id}"  onclick="editReview(event.target)">
+                        <button class="btn btn-outline-primary me-2" style="float: right;" th:if="${usersBook.user.username == user.username && usersBook.review != null}" th:id="'edit-review-' + ${usersBook.usersBooks_id}" th:onclick="editReview(event.target, [[${usersBook.review.rating}]]);" th:value="${usersBook.usersBooks_id}" >
                           Edit Review
                         </button>
                         <h5 class="card-title" th:text="${usersBook.book.title}"></h5>
@@ -109,6 +109,8 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                             <p class="card-text" th:text="${usersBook.review?.review_text}"></p>
                           </div>
                         </div>
+
+                        <!-- Add review -->
                         <div th:unless="${usersBook.review != null}" class="mb-3 display-none" th:id="'review-form-' + ${usersBook.usersBooks_id}">
                           <b>Add Review</b>
                           <br>
@@ -141,7 +143,47 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                           <button class="btn btn-primary mt-1" onclick="saveReview(event.target)" th:id="${usersBook.usersBooks_id}">
                             Save Review
                           </button>
+                          <button class="btn btn-outline-secondary mt-1 ms-1" th:id="${'add-review-cancel-' + usersBook.usersBooks_id}" th:value="${usersBook.usersBooks_id}" onclick="cancelAdding(event.target.value)">
+                            Cancel
+                          </button>
+                        </div>
 
+                        <!-- Edit review -->
+                        <div th:if="${usersBook.review != null}" class="mb-3 display-none" th:id="'edit-review-form-' + ${usersBook.usersBooks_id}">
+                          <b>Edit Review</b>
+                          <br>
+                          Please select rating:
+                          <br>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" th:id="'edit-1-rating-' + ${usersBook.usersBooks_id}" value="1">
+                            <label class="form-check-label" for="inlineRadio1">1</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" th:id="'edit-2-rating-' + ${usersBook.usersBooks_id}" value="2">
+                            <label class="form-check-label" for="inlineRadio2">2</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" th:id="'edit-3-rating-' + ${usersBook.usersBooks_id}" value="3">
+                            <label class="form-check-label" for="inlineRadio3">3</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" th:id="'edit-4-rating-' + ${usersBook.usersBooks_id}" value="4">
+                            <label class="form-check-label" for="inlineRadio4">4</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" th:id="'edit-5-rating-' + ${usersBook.usersBooks_id}" value="5">
+                            <label class="form-check-label" for="inlineRadio5">5</label>
+                          </div>
+                          <div>
+                            <label for="review-textarea">Please write your review here:</label>
+                            <textarea class="form-control" th:id="'edit-review-text-' + ${usersBook.usersBooks_id}" rows="5" th:text="${usersBook.review.review_text}"></textarea>
+                          </div>
+                          <button class="btn btn-primary mt-1" th:onclick="saveEditReview([[${usersBook.usersBooks_id}]], [[${usersBook.review.review_id}]]);" th:value="${usersBook.usersBooks_id}">
+                            Save Review
+                          </button>
+                          <button class="btn btn-outline-secondary mt-1 ms-1" th:id="${'cancel-' + usersBook.usersBooks_id}" th:value="${usersBook.usersBooks_id}" onclick="cancelEdit(event.target.value)">
+                            Cancel
+                          </button>
                         </div>
 
                         
@@ -215,6 +257,10 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
       }
 
       const deleteUsersBook = async (target) => {
+        if (!confirm("Are you sure? Removing book also removes possible review.")) {
+          return;
+        }
+
         const url = `${apiBaseUrl}/usersbooks/${target.id}`;
 
         try {
@@ -315,6 +361,70 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
       const showReviewForm = (target) => {
         document.getElementById(`review-form-${target.value}`).classList.remove('display-none');
         document.getElementById(`show-review-form-${target.value}`).classList.add('display-none');
+      }
+
+      const editReview = (target, rating) => {
+        document.getElementById(`edit-${rating}-rating-${target.value}`).click();
+        document.getElementById(`edit-review-form-${target.value}`).classList.remove('display-none');
+        document.getElementById(`edit-review-${target.value}`).disabled = true;
+      }
+
+      const cancelEdit = (target) => {
+        console.log(target)
+        document.getElementById(`edit-review-form-${target}`).classList.add('display-none');
+        document.getElementById(`edit-review-${target}`).disabled = false;
+      }
+
+      const cancelAdding = (target) => {
+        document.getElementById(`review-form-${target}`).classList.add('display-none');
+        document.getElementById(`show-review-form-${target}`).classList.remove('display-none');
+      }
+
+      const saveEditReview = async (usersBook_id, review_id) => {
+        const url = `${apiBaseUrl}/reviews/${review_id}`;
+        const newReviewText = document.getElementById(`edit-review-text-${usersBook_id}`).value;
+        let newRating;
+
+        if (document.getElementById(`edit-1-rating-${usersBook_id}`).checked) {
+          newRating = 1;
+        } else if (document.getElementById(`edit-2-rating-${usersBook_id}`).checked) {
+          newRating = 2;
+        } else if (document.getElementById(`edit-3-rating-${usersBook_id}`).checked) {
+          newRating = 3;
+        } else if (document.getElementById(`edit-4-rating-${usersBook_id}`).checked) {
+          newRating = 4;
+        } else if (document.getElementById(`edit-5-rating-${usersBook_id}`).checked) {
+          newRating = 5;
+        } else {
+          return;
+        }
+
+        console.log(newRating)
+        console.log(newReviewText)
+
+        try {
+            const response = await fetch(url, {
+              method: "PUT",
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                review: newReviewText,
+                rating: newRating,
+              })
+            });
+
+            if (!response.ok) {
+              throw new Error(`Response status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            window.location.href = '/users/' + "[[${user.username}]]";
+          } catch (error) {
+            console.error(error.message);
+          }
+
       }
 
     </script>

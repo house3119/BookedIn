@@ -11,6 +11,11 @@ public class PostModelReview {
   public PostModelReview() {
   }
 
+  public PostModelReview(String review, int rating) {
+    this.review = review;
+    this.rating = rating;
+  }
+
   public PostModelReview(String review, int rating, Long usersBooksId) {
     this.review = review;
     this.rating = rating;

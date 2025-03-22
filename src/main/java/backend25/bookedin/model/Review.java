@@ -35,13 +35,13 @@ public class Review {
 
   @NotBlank(message = "Review text is required")
   @Size(max = 3000, message = "Max 3000 characters")
-  @Column(name = "review_text", nullable = false, updatable = false)
+  @Column(name = "review_text", nullable = false, updatable = true)
   private String review_text;
 
   @NotNull(message = "Rating is required")
   @Min(1)
   @Max(5)
-  @Column(name = "rating", nullable = false, updatable = false)
+  @Column(name = "rating", nullable = false, updatable = true)
   private int rating;
 
 
