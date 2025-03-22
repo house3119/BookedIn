@@ -66,15 +66,32 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                   <div class="card-body container">
                     <div class="row">
                       <div class="col-10">
-                        <a class="btn btn-danger" style="float: right;" th:if="${usersBook.user.username == user.username}" th:id="${usersBook.usersBooks_id}" onclick="deleteUsersBook(event.target)">
-                          Remove
-                        </a>
+                        <button class="btn btn-danger" style="float: right;" th:if="${usersBook.user.username == user.username}" th:id="${usersBook.usersBooks_id}" onclick="deleteUsersBook(event.target)">
+                          Remove Book
+                        </button>
+                        <button class="btn btn-primary me-2" style="float: right;" th:if="${usersBook.user.username == user.username && usersBook.review == null}" th:id="'show-review-form-' + ${usersBook.usersBooks_id}" th:value="${usersBook.usersBooks_id}" onclick="showReviewForm(event.target)">
+                          Add Review
+                        </button>
+                        <button class="btn btn-outline-primary me-2" style="float: right;" th:if="${usersBook.user.username == user.username && usersBook.review != null}" th:id="'edit-review-' + ${usersBook.usersBooks_id}"  onclick="editReview(event.target)">
+                          Edit Review
+                        </button>
                         <h5 class="card-title" th:text="${usersBook.book.title}"></h5>
                         
                         <h6 th:text="${usersBook.book.author}"></h6>
                         <h6 th:text="${usersBook.book.published_year}"></h6>
                         <p><b>Reading Status: </b>
-                            <th:block th:switch="${usersBook.reading_status}">
+                          <br>
+                            <select name="" id="" th:if="${usersBook.user.username == user.username}" class="form-select" style="width: 15em; display: inline-block;" onchange="updateReadingStatus(event.target)" th:id="${usersBook.usersBooks_id}">
+                              <option value="No status" th:attr="selected=${usersBook.reading_status == 'No status' ? true : false}">No Status</option>
+                              <option value="Finished" th:attr="selected=${usersBook.reading_status == 'Finished' ? true : false}">Finished</option>
+                              <option value="Wishlist" th:attr="selected=${usersBook.reading_status == 'Wishlist' ? true : false}">Wishlist</option>
+                              <option value="Currently reading" th:attr="selected=${usersBook.reading_status == 'Currently reading' ? true : false}">Currently reading</option>
+                            </select>
+                            <span th:id="'status-change-message-' + ${usersBook.usersBooks_id}" style="display: inline-block;" class="text-success ms-2">
+
+                            </span>
+                            <th:block th:switch="${usersBook.reading_status}" th:unless="${usersBook.user.username == user.username}">
+                              <br>
                                 <span th:case="'No status'" th:text="${usersBook.reading_status}" class="text-secondary"></span>
                                 <span th:case="'Finished'" th:text="${usersBook.reading_status}" class="text-success"></span>
                                 <span th:case="'Wishlist'" th:text="${usersBook.reading_status}" class="text-danger"></span>
@@ -82,7 +99,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                                 <span th:case="*" th:text="${usersBook.reading_status}" class="text-success"></span>
                             </th:block>
                         </p>
-                        <div th:if="${usersBook.reading_status == 'Finished'}">
+                        <div th:if="${usersBook.review != null}" class="mb-3">
                           <b>Review:
                             <span th:each="i : ${#numbers.sequence(1, usersBook.review?.rating)}" class="fa fa-star checked"></span>
                             <span th:if="${usersBook.review?.rating != 5}" th:each="i : ${#numbers.sequence(1, 5 - usersBook.review?.rating)}" class="fa fa-star"></span>
@@ -92,54 +109,93 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                             <p class="card-text" th:text="${usersBook.review?.review_text}"></p>
                           </div>
                         </div>
+                        <div th:unless="${usersBook.review != null}" class="mb-3 display-none" th:id="'review-form-' + ${usersBook.usersBooks_id}">
+                          <b>Add Review</b>
+                          <br>
+                          Please select rating:
+                          <br>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" th:id="'1-rating-' + ${usersBook.usersBooks_id}" value="1" checked>
+                            <label class="form-check-label" for="inlineRadio1">1</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" th:id="'2-rating-' + ${usersBook.usersBooks_id}" value="2">
+                            <label class="form-check-label" for="inlineRadio2">2</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" th:id="'3-rating-' + ${usersBook.usersBooks_id}" value="3">
+                            <label class="form-check-label" for="inlineRadio3">3</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" th:id="'4-rating-' + ${usersBook.usersBooks_id}" value="4">
+                            <label class="form-check-label" for="inlineRadio4">4</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" th:id="'5-rating-' + ${usersBook.usersBooks_id}" value="5">
+                            <label class="form-check-label" for="inlineRadio5">5</label>
+                          </div>
+                          <div>
+                            <label for="review-textarea">Please write your review here:</label>
+                            <textarea class="form-control" th:id="'review-text-' + ${usersBook.usersBooks_id}" rows="5"></textarea>
+                          </div>
+                          <button class="btn btn-primary mt-1" onclick="saveReview(event.target)" th:id="${usersBook.usersBooks_id}">
+                            Save Review
+                          </button>
+
+                        </div>
+
                         
                       </div>
                       <div class="col-2">
                         <img th:src="${usersBook.book.img_link}" alt="" width="100%">
                       </div>
-                    </div>
-                    <div class="accordion mt-2" id="accordionExample">
-                      <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingOne">
-                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" th:data-bs-target="${'#' + usersBook.usersBooks_id}" aria-expanded="false" th:aria-controls="${usersBook.usersBooks_id}">
-                            <b>Full information</b>
-                          </button>
-                        </h2>
-                        <div th:id="${usersBook.usersBooks_id}" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                          <div class="accordion-body">
-                            <div class="container">
-                              <div class="row">
-                                <div class="col-12">
-                                  <p th:text="${usersBook.book.description}"></p>
-                                </div>
-                              </div>
 
-                              <div class="row">
-                                <div class="col-4">
-                                  <b>Page Count</b>
-                                  <br>
-                                  <span th:text="${usersBook.book.page_count}"></span>
+                      <div class="accordion mt-2" id="accordionExample">
+                        <div class="accordion-item">
+                          <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" th:data-bs-target="${'#' + usersBook.usersBooks_id}" aria-expanded="false" th:aria-controls="${usersBook.usersBooks_id}">
+                              <b>Full information</b>
+                            </button>
+                          </h2>
+                          <div th:id="${usersBook.usersBooks_id}" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                              <div class="container">
+                                <div class="row">
+                                  <div class="col-12">
+                                    <p th:text="${usersBook.book.description}"></p>
+                                  </div>
                                 </div>
-
-                                <div class="col-4">
-                                  <b>Language</b>
-                                  <br>
-                                  <span th:text="${usersBook.book.language}"></span>
+  
+                                <div class="row">
+                                  <div class="col-4">
+                                    <b>Page Count</b>
+                                    <br>
+                                    <span th:text="${usersBook.book.page_count}"></span>
+                                  </div>
+  
+                                  <div class="col-4">
+                                    <b>Language</b>
+                                    <br>
+                                    <span th:text="${usersBook.book.language}"></span>
+                                  </div>
+  
+                                  <div class="col-4">
+                                    <b>ISBN</b>
+                                    <br>
+                                    <span th:text="${usersBook.book.isbn}"></span>
+                                  </div>
+  
                                 </div>
-
-                                <div class="col-4">
-                                  <b>ISBN</b>
-                                  <br>
-                                  <span th:text="${usersBook.book.isbn}"></span>
-                                </div>
-
                               </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </div> 
+                      </div> 
+                    </div>
+
                   </div>
+
+                  
                 </div>
               </div>
             </div>
@@ -172,6 +228,93 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
           console.error(error.message);
         }
 
+      }
+
+      const updateReadingStatus = async (target) => {
+        const url = `${apiBaseUrl}/usersbooks/${target.id}`;
+        console.log(target.value)
+        const statusSpan = document.getElementById('status-change-message-' + target.id);
+
+        //console.log(statusSpan)
+
+        try {
+            const response = await fetch(url, {
+              method: "PUT",
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                readingStatus: target.value
+              })
+            });
+
+            if (!response.ok) {
+              throw new Error(`Response status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log(result)
+            
+            statusSpan.innerHTML = 'Status updated';
+            setTimeout(() => {
+              statusSpan.innerHTML = '';
+            }, 2000)
+
+          } catch (error) {
+            console.error(error.message);
+          }
+      }
+
+
+      const saveReview = async (target) => {
+        const url = `${apiBaseUrl}/reviews`;
+        const usersBookNo = target.id;
+        const reviewText = document.getElementById(`review-text-${usersBookNo}`).value;
+        let rating;
+
+        if (document.getElementById(`1-rating-${usersBookNo}`).checked) {
+          rating = 1;
+        } else if (document.getElementById(`2-rating-${usersBookNo}`).checked) {
+          rating = 2;
+        } else if (document.getElementById(`3-rating-${usersBookNo}`).checked) {
+          rating = 3;
+        } else if (document.getElementById(`4-rating-${usersBookNo}`).checked) {
+          rating = 4;
+        } else if (document.getElementById(`5-rating-${usersBookNo}`).checked) {
+          rating = 5;
+        } else {
+          return;
+        }
+
+        try {
+            const response = await fetch(url, {
+              method: "POST",
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                review: reviewText,
+                rating: rating,
+                usersBooksId: usersBookNo
+              })
+            });
+
+            if (!response.ok) {
+              throw new Error(`Response status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            window.location.href = '/users/' + "[[${user.username}]]";
+          } catch (error) {
+            console.error(error.message);
+          }
+      }
+
+      const showReviewForm = (target) => {
+        document.getElementById(`review-form-${target.value}`).classList.remove('display-none');
+        document.getElementById(`show-review-form-${target.value}`).classList.add('display-none');
       }
 
     </script>

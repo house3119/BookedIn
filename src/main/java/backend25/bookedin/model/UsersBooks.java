@@ -2,6 +2,8 @@ package backend25.bookedin.model;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -43,6 +45,7 @@ public class UsersBooks {
 
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "review_id")
+  @JsonIgnore
   private Review review;
 
   public UsersBooks() {

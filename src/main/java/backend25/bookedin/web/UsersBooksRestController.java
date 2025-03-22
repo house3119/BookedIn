@@ -13,6 +13,7 @@ import backend25.bookedin.model.AppUserRepository;
 import backend25.bookedin.model.Book;
 import backend25.bookedin.model.BookRepository;
 import backend25.bookedin.model.PostModelUsersBooks;
+import backend25.bookedin.model.PutModelUsersBooks;
 import backend25.bookedin.model.Review;
 import backend25.bookedin.model.ReviewRepository;
 import backend25.bookedin.model.UsersBooks;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 
 @RestController
@@ -66,6 +69,24 @@ public class UsersBooksRestController {
       usersBooksRepository.delete(toBeDeleted);
 
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+    } catch(Exception e) {
+      return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @PutMapping("api/usersbooks/{id}")
+  public ResponseEntity<?> updateUsersBooks(@PathVariable (required = true) Long id, @RequestBody PutModelUsersBooks body) {
+    try {
+      UsersBooks toBeUpdated = usersBooksRepository.findById(id).orElse(null);
+      if (toBeUpdated == null) {
+        throw new Exception("No such id");
+      }
+
+      toBeUpdated.setReading_status(body.getReadingStatus());
+      usersBooksRepository.save(toBeUpdated);
+
+      return new ResponseEntity<UsersBooks>(toBeUpdated, HttpStatus.OK);
 
     } catch(Exception e) {
       return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
