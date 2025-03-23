@@ -28,7 +28,8 @@ public class WebSecurityConfig {
 
 	private static final AntPathRequestMatcher[] WHITE_LIST_URLS = {
 		new AntPathRequestMatcher("/h2-console/**"),
-		new AntPathRequestMatcher("/api/**")
+		new AntPathRequestMatcher("/api/**"),
+		new AntPathRequestMatcher("/register")
 	};
 
 	@Bean

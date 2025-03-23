@@ -8,18 +8,23 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import backend25.bookedin.model.AccountType;
+import backend25.bookedin.model.AccountTypeRepository;
 import backend25.bookedin.model.AppUser;
 import backend25.bookedin.model.AppUserRepository;
 import backend25.bookedin.model.Book;
 import backend25.bookedin.model.CountryRepository;
+import backend25.bookedin.model.RegisterForm;
 import backend25.bookedin.model.ReviewRepository;
 import backend25.bookedin.model.UsersBooks;
 import backend25.bookedin.model.UsersBooksRepository;
@@ -34,18 +39,49 @@ public class BookedinController {
   private UsersBooksRepository usersBooksRepository;
   private ReviewRepository reviewRepository;
   private CountryRepository countryRepository;
+  private AccountTypeRepository accountTypeRepository;
 
-  public BookedinController(AppUserRepository appUserRepository, UsersBooksRepository usersBooksRepository, ReviewRepository reviewRepository, CountryRepository countryRepository) {
+  public BookedinController(AppUserRepository appUserRepository, UsersBooksRepository usersBooksRepository, ReviewRepository reviewRepository, CountryRepository countryRepository, AccountTypeRepository accountTypeRepository) {
     this.appUserRepository = appUserRepository;
     this.usersBooksRepository = usersBooksRepository;
     this.reviewRepository = reviewRepository;
     this.countryRepository = countryRepository;
+    this.accountTypeRepository = accountTypeRepository;
   }
 
   @RequestMapping(value="/login")
   public String login() {	
     return "login";
   }
+
+  @RequestMapping(value="/register", method = RequestMethod.GET)
+  public String getRegisterForm(Model model) {
+    model.addAttribute("registerForm", new RegisterForm());
+    return "register";
+  }
+
+  @RequestMapping(value="/register", method = RequestMethod.POST)
+  public String saveUser(@Valid @ModelAttribute("registerForm") RegisterForm registerform, BindingResult bindingResult) {
+
+    String password = registerform.getPassword1();
+    BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
+    String pwHash = bc.encode(password);
+    AccountType acc = accountTypeRepository.findByType("USER");
+
+    AppUser newUser = new AppUser(registerform.getUsername(), pwHash, acc);
+    appUserRepository.save(newUser);
+
+    System.out.println("USER: " + newUser);
+
+      // TODO BindingResult -käsittely
+
+    if (!bindingResult.hasErrors()) {
+      if (registerform.getPassword1() == registerform.getPassword2()) {
+
+      }
+    }
+    return "login";
+  } 
 
   @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
   @RequestMapping(value="users/{username}", method=RequestMethod.GET)
@@ -129,7 +165,6 @@ public class BookedinController {
     model.addAttribute("user", user);
     return "index";
   }
-
 
   @RequestMapping(value="*", method=RequestMethod.GET)
   public String toIndex() {
