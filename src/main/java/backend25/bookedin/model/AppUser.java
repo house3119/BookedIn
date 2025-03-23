@@ -34,19 +34,19 @@ public class AppUser {
   private String username;
 
   @Size(max = 200, message = "Avatar URL can be max 200 characters long")
-  @Column(name = "avatar_url", nullable = false, updatable = false)
+  @Column(name = "avatar_url", nullable = true, updatable = true)
   private String avatar_url;
 
   @NotEmpty(message = "Password hash is mandatory")
   @Size(max = 60)
-  @Column(name = "password_hash", nullable = false, updatable = false)
+  @Column(name = "password_hash", nullable = false)
   private String password_hash;
 
   @ManyToOne
-  @JoinColumn(name = "country_id")
+  @JoinColumn(name = "country_id", nullable = true, updatable = true)
   private Country country;
 
-  @Column(name = "birth_year", nullable = false, updatable = false)
+  @Column(name = "birth_year", nullable = true, updatable = true)
   private int age;
 
   @ManyToOne

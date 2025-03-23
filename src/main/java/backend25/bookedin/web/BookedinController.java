@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,9 +18,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import backend25.bookedin.model.AppUser;
 import backend25.bookedin.model.AppUserRepository;
+import backend25.bookedin.model.Book;
+import backend25.bookedin.model.CountryRepository;
 import backend25.bookedin.model.ReviewRepository;
 import backend25.bookedin.model.UsersBooks;
 import backend25.bookedin.model.UsersBooksRepository;
+import jakarta.validation.Valid;
 
 
 @Controller
@@ -29,11 +33,13 @@ public class BookedinController {
   private AppUserRepository appUserRepository;
   private UsersBooksRepository usersBooksRepository;
   private ReviewRepository reviewRepository;
+  private CountryRepository countryRepository;
 
-  public BookedinController(AppUserRepository appUserRepository, UsersBooksRepository usersBooksRepository, ReviewRepository reviewRepository) {
+  public BookedinController(AppUserRepository appUserRepository, UsersBooksRepository usersBooksRepository, ReviewRepository reviewRepository, CountryRepository countryRepository) {
     this.appUserRepository = appUserRepository;
     this.usersBooksRepository = usersBooksRepository;
     this.reviewRepository = reviewRepository;
+    this.countryRepository = countryRepository;
   }
 
   @RequestMapping(value="/login")
@@ -59,6 +65,50 @@ public class BookedinController {
 
       model.addAttribute("profile", profile);
       return "profile";
+  }
+
+  @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
+  @RequestMapping(value="users/{username}/edit", method=RequestMethod.GET)
+  public String getEditProfilePage(@PathVariable(required = true) String username, Model model, Authentication authentication) {
+    AppUser profile = appUserRepository.findByUsernameIgnoreCase(username);
+    AppUser loggedInUser = appUserRepository.findByUsernameIgnoreCase(authentication.getName());
+    boolean access = true;
+
+    if (profile == null) {
+      return "redirect:/index";
+    }
+
+    if (profile.getUsername() != loggedInUser.getUsername()) {
+      access = false;
+    }
+
+    if (loggedInUser.getAccount_type().getAccount_type() == "ADMIN") {
+      access = true;
+    }
+
+    if (access == false) {
+      return "redirect:/index";
+    }
+
+    model.addAttribute("profile", profile);
+    model.addAttribute("user", loggedInUser);
+    model.addAttribute("countries", countryRepository.findAll());
+
+    return "editprofile";
+
+  }
+
+  @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
+  @RequestMapping(value="users/{username}", method=RequestMethod.POST)
+  public String saveEditProfile(@Valid AppUser editedUser, BindingResult bindingResult, @PathVariable(required = false) String username, Model model, Authentication authentication) {
+    AppUser oldUser = appUserRepository.findByUsernameIgnoreCase(username);
+    oldUser.setAvatar_url(editedUser.getAvatar_url());
+    oldUser.setAge(editedUser.getAge());
+    oldUser.setCountry(editedUser.getCountry());
+    System.out.println("COUNTRY:    " + editedUser.getCountry());
+    appUserRepository.save(oldUser);
+
+    return "redirect:/users/bilbo";
   }
   
 
