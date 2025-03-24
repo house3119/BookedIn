@@ -23,6 +23,7 @@ import backend25.bookedin.model.AccountTypeRepository;
 import backend25.bookedin.model.AppUser;
 import backend25.bookedin.model.AppUserRepository;
 import backend25.bookedin.model.Book;
+import backend25.bookedin.model.ChangePasswordForm;
 import backend25.bookedin.model.CountryRepository;
 import backend25.bookedin.model.RegisterForm;
 import backend25.bookedin.model.ReviewRepository;
@@ -157,6 +158,53 @@ public class BookedinController {
     appUserRepository.save(oldUser);
 
     return "redirect:/users/" + editedUser.getUsername();
+  }
+
+  @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
+  @RequestMapping(value="users/{username}/changepw", method=RequestMethod.GET)
+  public String getPwChangeForm(@PathVariable(required = true) String username, Model model, Authentication authentication) {
+
+    if (!username.toLowerCase().equals(authentication.getName().toLowerCase())) {
+      return "redirect:/index";
+    }
+    model.addAttribute("changePwForm", new ChangePasswordForm());
+    model.addAttribute("user", appUserRepository.findByUsernameIgnoreCase(username));
+
+    return "changepw";
+
+  }
+
+  @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
+  @RequestMapping(value="users/{username}/changepw", method=RequestMethod.POST)
+  public String updatePw(@Valid @ModelAttribute("changePwForm") ChangePasswordForm changePwForm, BindingResult bindingResult, @PathVariable(required = false) String username, Model model, Authentication authentication) {
+
+    AppUser currentDetails = appUserRepository.findByUsernameIgnoreCase(authentication.getName());
+    BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
+
+    if (!bc.matches(changePwForm.getOldPassword(), currentDetails.getPassword_hash())) {
+      bindingResult.rejectValue("oldPassword", "err.oldPassword", "Inputted password does not match!");
+    }
+
+    if (!changePwForm.getNewPassword1().matches(changePwForm.getNewPassword2())) {
+      bindingResult.rejectValue("newPassword2", "err.newPassword2", "New passwords don't match!");
+    }
+
+    if (bindingResult.hasErrors()) {
+      model.addAttribute("changePwForm", changePwForm);
+      model.addAttribute("user", appUserRepository.findByUsernameIgnoreCase(authentication.getName()));
+      return "changepw";
+    }
+
+    currentDetails.setPassword_hash(bc.encode(changePwForm.getNewPassword1()));
+    appUserRepository.save(currentDetails);
+
+    model.addAttribute("message", "Password changed succesfully!");
+
+    model.addAttribute("changePwForm", new ChangePasswordForm());
+    model.addAttribute("user", currentDetails);
+
+    return "changepw";
+
   }
   
 

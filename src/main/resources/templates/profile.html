@@ -54,9 +54,12 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
             <p><b>Birthyear: </b><span th:text="${profile.age == 0}  ? 'unknown' : ${profile.age}"></span></p>
             <p><b>Followers: </b><span th:text="${followers}"></span></p>
           </div>
-          <div class="col-2" th:if="${profile.username == user.username || user.account_type.account_type == 'ADMIN'}">
-            <a class="btn btn-outline-primary" th:href="'/users/' + ${profile.username} + '/edit'">
+          <div class="col-2">
+            <a th:if="${profile.username == user.username || user.account_type.account_type == 'ADMIN'}" class="btn btn-outline-primary" th:href="'/users/' + ${profile.username} + '/edit'">
               Edit profile details
+            </a>
+            <a th:if="${profile.username == user.username}" class="btn btn-outline-primary mt-2" th:href="'/users/' + ${profile.username} + '/changepw'">
+              Change Password
             </a>
           </div>
         </div>
