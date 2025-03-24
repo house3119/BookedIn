@@ -6,15 +6,15 @@ import jakarta.validation.constraints.Size;
 public class RegisterForm {
 
   @NotEmpty(message = "Username is required")
-  @Size(min= 5 , max = 100)
+  @Size(min= 5 , max = 100, message = "Length needs to be over 5 characters (max 100 characters).")
   String username;
 
   @NotEmpty(message = "Password is required")
-  @Size(min= 5 , max = 100)
+  @Size(min= 5 , max = 100, message = "Length needs to be over 5 characters (max 100 characters).")
   String password1;
 
   @NotEmpty(message = "Password confirmation is required")
-  @Size(min= 5 , max = 100)
+  @Size(min= 5 , max = 100, message = "Length needs to be over 5 characters (max 100 characters).")
   String password2;
 
   public RegisterForm() {

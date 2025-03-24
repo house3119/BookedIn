@@ -56,16 +56,17 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                   Avatar URL
                 </label>
                 <input class="form-control" type="text" id="" th:field="*{avatar_url}">
+
               </div>
-              <div class="text-danger" th:if="${#fields.hasErrors('avatar_url')}" th:errors="*{avatar_url}">Error</div>
+              <div th:if="${#fields.hasErrors('avatar_url')}" th:errors="*{avatar_url}" class="text-danger">Avatar URL Error</div>
       
               <div class="form-group" style="margin-bottom: 5px;">
                 <label for="" style="display: inline-block; width: 70px;">
                   Birthyear
                 </label>
                 <input class="form-control" type="number" id="" th:field="*{age}">
+                <div class="text-danger" th:if="${#fields.hasErrors('age')}" th:errors="*{age}">Error</div>
               </div>
-              <div class="text-danger" th:if="${#fields.hasErrors('age')}" th:errors="*{age}">Error</div>
       
               <div class="form-group" style="margin-bottom: 5px;">
                 <label for="" style="display: inline-block; width: 70px;">
@@ -80,8 +81,9 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                           >
                   </option>
                 </select>
+                <div class="text-danger" th:if="${#fields.hasErrors('country.name')}" th:errors="*{country.name}">Error</div>
               </div>
-              <div class="text-danger" th:if="${#fields.hasErrors('country.name')}" th:errors="*{country.name}">Error</div>
+              
 
               <input class="btn btn-primary" type="submit" value="Save">
               <a class="btn btn-outline-secondary" th:href="'/users/' + ${profile.username}">Cancel</a>
@@ -117,6 +119,20 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
               <input class="btn btn-primary" type="submit" value="Save">
               <a class="btn btn-outline-secondary" href="/booklist">Cancel</a>
               -->
+              <div class="form-group" style="margin-bottom: 5px; display: none;">
+                <label for="" style="display: inline-block; width: 70px;">
+                  pw hash
+                </label>
+                <input class="form-control" type="text" id="" th:field="*{password_hash}">
+              </div>
+
+              <div class="form-group" style="margin-bottom: 5px; display: none;">
+                <label for="" style="display: inline-block; width: 70px;">
+                  date
+                </label>
+                <input class="form-control" type="text" id="" th:field="*{date_joined}">
+              </div>
+
             </form>
           </div>
 

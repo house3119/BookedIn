@@ -13,13 +13,13 @@
                 <p>Register for new account by filling in the fields below.</p>
                 <form th:object="${registerForm}" th:action="@{/register}" method="post" style="text-align: start;">
                     <label>Username<input type="text" th:field="*{username}" class="form-control"/></label>
-                    <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username Error</p>
+                    <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="text-danger">Username Error</div>
                     <br>
                     <label>Password<input type="password" th:field="*{password1}" class="form-control"/></label>
-                    <p th:if="${#fields.hasErrors('password1')}" th:errors="*{password1}">Password1 Error</p>
+                    <div th:if="${#fields.hasErrors('password1')}" th:errors="*{password1}" class="text-danger">Password1 Error</div>
                     <br>
                     <label>Confirm password<input type="password" th:field="*{password2}" class="form-control"/></label>
-                    <p th:if="${#fields.hasErrors('password2')}" th:errors="*{password2}">Password2 Error</p>
+                    <div th:if="${#fields.hasErrors('password2')}" th:errors="*{password2}" class="text-danger">Password2 Error</div>
                     <br>
                     <input type="submit" value="Register" class="btn btn-primary my-2"/>
                 </form>

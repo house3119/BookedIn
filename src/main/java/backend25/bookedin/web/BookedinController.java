@@ -61,25 +61,30 @@ public class BookedinController {
   }
 
   @RequestMapping(value="/register", method = RequestMethod.POST)
-  public String saveUser(@Valid @ModelAttribute("registerForm") RegisterForm registerform, BindingResult bindingResult) {
+  public String saveUser(@Valid RegisterForm registerform, BindingResult bindingResult, Model model) {
+    String username = registerform.getUsername();
+    if (appUserRepository.findByUsernameIgnoreCase(registerform.getUsername()) != null) {
+      bindingResult.rejectValue("username", "err.username", "Username already exists!"); 
+    }
+
+    if (!registerform.getPassword1().equals(registerform.getPassword2())) {
+      bindingResult.rejectValue("password2", "err.password2", "Passwords don't match!"); 
+    }
+
+    if (bindingResult.hasErrors()) {
+      model.addAttribute("registerForm", registerform);
+      return "register";
+    }
 
     String password = registerform.getPassword1();
     BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
     String pwHash = bc.encode(password);
     AccountType acc = accountTypeRepository.findByType("USER");
 
-    AppUser newUser = new AppUser(registerform.getUsername(), pwHash, acc);
+    AppUser newUser = new AppUser(username, pwHash, acc);
     appUserRepository.save(newUser);
 
-    System.out.println("USER: " + newUser);
-
-      // TODO BindingResult -käsittely
-
-    if (!bindingResult.hasErrors()) {
-      if (registerform.getPassword1() == registerform.getPassword2()) {
-
-      }
-    }
+    model.addAttribute("message", "New account created succesfully. You can now log in.");
     return "login";
   } 
 
@@ -136,15 +141,22 @@ public class BookedinController {
 
   @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
   @RequestMapping(value="users/{username}", method=RequestMethod.POST)
-  public String saveEditProfile(@Valid AppUser editedUser, BindingResult bindingResult, @PathVariable(required = false) String username, Model model, Authentication authentication) {
+  public String saveEditProfile(@Valid @ModelAttribute("profile") AppUser editedUser, BindingResult bindingResult, @PathVariable(required = false) String username, Model model, Authentication authentication) {
+
+    if (bindingResult.hasErrors()) {
+      model.addAttribute("profile", editedUser);
+      model.addAttribute("user", appUserRepository.findByUsernameIgnoreCase(authentication.getName()));
+      model.addAttribute("countries", countryRepository.findAll());
+      return "editprofile";
+    }
+
     AppUser oldUser = appUserRepository.findByUsernameIgnoreCase(username);
     oldUser.setAvatar_url(editedUser.getAvatar_url());
     oldUser.setAge(editedUser.getAge());
     oldUser.setCountry(editedUser.getCountry());
-    System.out.println("COUNTRY:    " + editedUser.getCountry());
     appUserRepository.save(oldUser);
 
-    return "redirect:/users/bilbo";
+    return "redirect:/users/" + editedUser.getUsername();
   }
   
 
