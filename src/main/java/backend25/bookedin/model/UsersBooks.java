@@ -18,7 +18,7 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "UsersBooks")
-public class UsersBooks {
+public class UsersBooks implements Comparable<UsersBooks> {
 
   @Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -120,6 +120,11 @@ public class UsersBooks {
   public String toString() {
     return "UsersBooks [usersBooks_id=" + usersBooks_id + ", user=" + user + ", book=" + book + ", dateAdded="
         + dateAdded + "]";
+  }
+
+  @Override
+  public int compareTo(UsersBooks ub) {
+    return getReview().getReviewAdded().compareTo(ub.getReview().getReviewAdded());
   }
 
 }

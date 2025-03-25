@@ -10,3 +10,6 @@
   display: none;
 }
 
+.nav-link:hover {
+  color: black;
+}

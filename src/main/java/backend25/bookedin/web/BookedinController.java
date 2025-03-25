@@ -1,7 +1,9 @@
 package backend25.bookedin.web;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -222,6 +224,13 @@ public class BookedinController {
   @RequestMapping(value="index", method=RequestMethod.GET)
   public String getIndex(Authentication authentication, Model model) {
     AppUser user = appUserRepository.findByUsernameIgnoreCase(authentication.getName());
+
+    List<UsersBooks> books = (List<UsersBooks>) usersBooksRepository.findAll();
+    List<UsersBooks> booksWithReviews = books.stream().filter(book -> book.getReview() != null).collect(Collectors.toList());
+
+    Collections.reverse(booksWithReviews);
+
+    model.addAttribute("booksWithReviews", booksWithReviews);
     model.addAttribute("user", user);
     return "index";
   }

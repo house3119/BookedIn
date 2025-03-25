@@ -44,6 +44,7 @@ public class AppUser {
 
   @ManyToOne
   @JoinColumn(name = "country_id", nullable = true, updatable = true)
+  @JsonIgnore
   private Country country;
 
   @Column(name = "birth_year", nullable = true, updatable = true)
