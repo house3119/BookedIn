@@ -108,6 +108,11 @@ public class BookedinController {
       model.addAttribute("user", user);
 
       model.addAttribute("profile", profile);
+
+      List<AppUser> allUsers = (List<AppUser>) appUserRepository.findAll();
+      List<AppUser> withoutLoggedInUser = allUsers.stream().filter(uzer -> uzer.getUsername() != user.getUsername()).collect(Collectors.toList());
+      List<String> namesForSearch = withoutLoggedInUser.stream().map(uzer -> uzer.getUsername()).collect(Collectors.toList());
+      model.addAttribute("usernamesForSearch", namesForSearch);
       return "profile";
   }
 
@@ -137,6 +142,11 @@ public class BookedinController {
     model.addAttribute("profile", profile);
     model.addAttribute("user", loggedInUser);
     model.addAttribute("countries", countryRepository.findAll());
+
+    List<AppUser> allUsers = (List<AppUser>) appUserRepository.findAll();
+    List<AppUser> withoutLoggedInUser = allUsers.stream().filter(uzer -> uzer.getUsername() != loggedInUser.getUsername()).collect(Collectors.toList());
+    List<String> namesForSearch = withoutLoggedInUser.stream().map(uzer -> uzer.getUsername()).collect(Collectors.toList());
+    model.addAttribute("usernamesForSearch", namesForSearch);
 
     return "editprofile";
 
@@ -171,6 +181,11 @@ public class BookedinController {
     }
     model.addAttribute("changePwForm", new ChangePasswordForm());
     model.addAttribute("user", appUserRepository.findByUsernameIgnoreCase(username));
+
+    List<AppUser> allUsers = (List<AppUser>) appUserRepository.findAll();
+    List<AppUser> withoutLoggedInUser = allUsers.stream().filter(uzer -> uzer.getUsername() != username).collect(Collectors.toList());
+    List<String> namesForSearch = withoutLoggedInUser.stream().map(uzer -> uzer.getUsername()).collect(Collectors.toList());
+    model.addAttribute("usernamesForSearch", namesForSearch);
 
     return "changepw";
 
@@ -217,6 +232,11 @@ public class BookedinController {
     model.addAttribute("user", user);
     List<UsersBooks> usersBooks = usersBooksRepository.findByUser(user);
     model.addAttribute("usersBooks", usersBooks);
+
+    List<AppUser> allUsers = (List<AppUser>) appUserRepository.findAll();
+    List<AppUser> withoutLoggedInUser = allUsers.stream().filter(uzer -> uzer.getUsername() != user.getUsername()).collect(Collectors.toList());
+    List<String> namesForSearch = withoutLoggedInUser.stream().map(uzer -> uzer.getUsername()).collect(Collectors.toList());
+    model.addAttribute("usernamesForSearch", namesForSearch);
     return "search";
   }
 
@@ -229,6 +249,12 @@ public class BookedinController {
     List<UsersBooks> booksWithReviews = books.stream().filter(book -> book.getReview() != null).collect(Collectors.toList());
 
     Collections.reverse(booksWithReviews);
+
+    List<AppUser> allUsers = (List<AppUser>) appUserRepository.findAll();
+    List<AppUser> withoutLoggedInUser = allUsers.stream().filter(uzer -> uzer.getUsername() != user.getUsername()).collect(Collectors.toList());
+    List<String> namesForSearch = withoutLoggedInUser.stream().map(uzer -> uzer.getUsername()).collect(Collectors.toList());
+    model.addAttribute("usernamesForSearch", namesForSearch);
+    model.addAttribute("namesLength", namesForSearch.size());
 
     model.addAttribute("booksWithReviews", booksWithReviews);
     model.addAttribute("user", user);
