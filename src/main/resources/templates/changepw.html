@@ -12,37 +12,24 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
   <body>
+
     <nav class="navbar navbar-expand-lg navbar-light bg-light" style="border-bottom: 1px solid rgb(235, 235, 235);" th:object="${user}">
       <a class="navbar-brand px-2" href="/index" style="font-size: 1.4em;">📖 BookedIn</a>
-
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav" >
-
         <form autocomplete="off" action="/action_page.php">
           <div class="autocomplete" style="width:200px;">
             <input id="myInput" type="text" name="myCountry" placeholder="Search for users" class="user-input form-control">
           </div>
           <button class="btn btn-outline-secondary" onclick="userSearch()" style="margin-bottom: 2px;">Submit</button>
         </form>
-
-
-
         <ul class="navbar-nav ms-auto">
-
-
-
           <li class="nav-item">
             <a class="nav-link pe-3" href="/search" style="border-right: 1px solid lightgrey; color: black;">Search Books</a>
           </li>
         </ul>
-        <!--
-        <form class="d-flex" role="search" style="margin-left: auto; margin-right: auto;">
-          <input class="form-control me-2" type="search" placeholder="Search users" aria-label="Search" id="user-search-input">
-          <button class="btn btn-outline-success" type="submit" onclick="userSearch(event)">Search</button>
-        </form>
-        -->
       </div>
       <span style="margin-right: 25px;" class="ms-3">Signed in as <b><a th:href="'/users/' + ${user.username}"><span th:text="${user.username}"></span></a></span></b>
       <form th:action="@{/logout}" method="post">
@@ -53,26 +40,17 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
     <main>
       <div class="container py-5">
          <h1>Change Password</h1>
-
           <div style="margin: auto; width: 100%;" class="my-4">
-            <div th:if="${message}" th:text="${message}" class="text-success">
-
-            </div>
-
+            <div th:if="${message}" th:text="${message}" class="text-success"></div>
             <form action="#" th:object="${user}" method="post">
-              
               <div class="form-group" style="margin-bottom: 5px;">
                 <label for="" style="display: inline-block;">
                   Username
                 </label>
                 <input class="form-control" type="text" id="" th:field="*{username}" disabled>
               </div>
-
             </form>
-
-
             <form action="#" th:action="@{/users/{username}/changepw(username=${user.username})}" th:object="${changePwForm}" method="post">
-              
               <div class="form-group" style="margin-bottom: 5px;">
                 <label for="" style="display: inline-block;">
                   Old password
@@ -89,27 +67,21 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
               </div>
               <div th:if="${#fields.hasErrors('newPassword1')}" th:errors="*{newPassword1}" class="text-danger">New Password 1 Error</div>
 
-              <div class="form-group" style="margin-bottom: 5px;">
+              <div class="form-group" style="margin-bottom: 10px;">
                 <label for="" style="display: inline-block;">
                   Confirm New Password
                 </label>
                 <input class="form-control" type="password" id="" th:field="*{newPassword2}">
               </div>
               <div th:if="${#fields.hasErrors('newPassword2')}" th:errors="*{newPassword2}" class="text-danger mb-2">New Password 2 Error</div>
-              
-
               <input class="btn btn-primary" type="submit" value="Save">
               <a class="btn btn-outline-secondary" th:href="'/users/' + ${user.username}">Cancel</a>
-
             </form>
           </div>
-
-
       </div>
     </main>
 
     <script th:inline="javascript">
-
       const userSearch = () => {
         event.preventDefault();
         const uzer = document.getElementById('myInput').value;
@@ -218,7 +190,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
     }
     
     const usersForSearch = [[${usernamesForSearch}]];
-    
+
     autocomplete(document.getElementById("myInput"), usersForSearch);
     
     </script>

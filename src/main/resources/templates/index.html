@@ -12,37 +12,24 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
   <body>
+
     <nav class="navbar navbar-expand-lg navbar-light bg-light" style="border-bottom: 1px solid rgb(235, 235, 235);" th:object="${user}">
       <a class="navbar-brand px-2" href="/index" style="font-size: 1.4em;">📖 BookedIn</a>
-
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav" >
-
         <form autocomplete="off" action="/action_page.php">
           <div class="autocomplete" style="width:200px;">
             <input id="myInput" type="text" name="myCountry" placeholder="Search for users" class="user-input form-control">
           </div>
           <button class="btn btn-outline-secondary" onclick="userSearch()" style="margin-bottom: 2px;">Submit</button>
         </form>
-
-
-
         <ul class="navbar-nav ms-auto">
-
-
-
           <li class="nav-item">
             <a class="nav-link pe-3" href="/search" style="border-right: 1px solid lightgrey; color: black;">Search Books</a>
           </li>
         </ul>
-        <!--
-        <form class="d-flex" role="search" style="margin-left: auto; margin-right: auto;">
-          <input class="form-control me-2" type="search" placeholder="Search users" aria-label="Search" id="user-search-input">
-          <button class="btn btn-outline-success" type="submit" onclick="userSearch(event)">Search</button>
-        </form>
-        -->
       </div>
       <span style="margin-right: 25px;" class="ms-3">Signed in as <b><a th:href="'/users/' + ${user.username}"><span th:text="${user.username}"></span></a></span></b>
       <form th:action="@{/logout}" method="post">
@@ -55,9 +42,9 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
          <h2 th:text="'Welcome to Bookedin!'"></h2>  
       </div>
       <div class="container">
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Delectus vero itaque qui iste amet, eaque optio quia iusto neque atque architecto. Alias amet quos dolorem eum voluptas atque blanditiis a cumque eius iure, veniam quam. Voluptatibus facilis tempora unde reprehenderit repellendus pariatur quae iure quis, nobis sequi suscipit sunt? Ad?
+        BookedIn is a simple community for readers. Start by searching for books and add them to your library. Then, share your thoughts about them or see what others have been reading lately!
       </div>
-      <div class="container text-center py-3">
+      <div class="container text-center py-4">
         <a href="/search" class="btn btn-primary me-2">
           Search for books
         </a>
@@ -67,24 +54,18 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
       </div>
       <div class="container my-4">
         <h3 class="py-2">Latest in Bookedin</h3>
-
         <div th:each="usersBook, iter: ${booksWithReviews}">
           <div class="card mb-3" style="width: 100%;">
             <div class="card-body container">
               <div class="row mb-2" style="border-bottom: 1px solid rgb(231, 233, 235);">
-  
-
-                  <h5>New review by <a th:href="'/users/' + ${usersBook.user.username}" th:text="${usersBook.user.username}"></a></h5>
-                  <span th:text="${usersBook.review.reviewAdded}" class="mb-2"></span>
-
-                
+                <h5>New review by <a th:href="'/users/' + ${usersBook.user.username}" th:text="${usersBook.user.username}"></a></h5>
+                <span th:text="${usersBook.review.reviewAdded}" class="mb-2"></span>
               </div>
               <div class="row mt-2">
                 <div class="col-10">
                   <h5 class="card-title" th:text="${usersBook.book.title}"></h5>
                   <h6 th:text="${usersBook.book.author}"></h6>
                   <h6 th:text="${usersBook.book.published_year}"></h6>
-
                   <div class="mb-3">
                     <b>Review:
                       <span th:each="i : ${#numbers.sequence(1, usersBook.review?.rating)}" class="fa fa-star checked"></span>
@@ -98,7 +79,6 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                 <div class="col-2">
                   <img th:src="${usersBook.book.img_link}" alt="" width="100%">
                 </div>
-
                 <div class="accordion mt-2" id="accordionExample">
                   <div class="accordion-item">
                     <h2 class="accordion-header" id="headingOne">
@@ -141,18 +121,13 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                   </div>
                 </div> 
               </div>
-
             </div>
-
-            
           </div>
         </div>
-
       </div>
     </main>
 
     <script th:inline="javascript">
-
       const userSearch = () => {
         event.preventDefault();
         const uzer = document.getElementById('myInput').value;

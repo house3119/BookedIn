@@ -2,8 +2,6 @@ package backend25.bookedin.web;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import backend25.bookedin.model.AppUser;
-import backend25.bookedin.model.Book;
 import backend25.bookedin.model.PostModelReview;
 import backend25.bookedin.model.PutModelReview;
 import backend25.bookedin.model.Review;
@@ -11,12 +9,11 @@ import backend25.bookedin.model.ReviewRepository;
 import backend25.bookedin.model.UsersBooks;
 import backend25.bookedin.model.UsersBooksRepository;
 
-import java.time.LocalDate;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -25,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 
 @RestController
+@EnableMethodSecurity(securedEnabled = true)
 public class ReviewRestController {
 
   @Autowired
@@ -34,6 +32,7 @@ public class ReviewRestController {
   ReviewRepository reviewRepository;
 
   @PostMapping("api/reviews")
+  @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
   public ResponseEntity<?> addNewReview(@RequestBody PostModelReview review) {
     try {
       UsersBooks usersBooks = usersBooksRepository.findById(review.getUsersBooksId()).orElse(null);
@@ -57,6 +56,7 @@ public class ReviewRestController {
   }
 
   @PutMapping("api/reviews/{id}")
+  @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
   public ResponseEntity<?> updateReview(@PathVariable(required = true) Long id, @RequestBody PutModelReview updatedReview) {
     try {
       Review oldReview = reviewRepository.findById(id).orElse(null);
@@ -76,5 +76,4 @@ public class ReviewRestController {
     }
   }
   
-
 }

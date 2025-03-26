@@ -1,6 +1,5 @@
 package backend25.bookedin.web;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,8 +7,6 @@ import java.util.stream.Collectors;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,13 +15,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import backend25.bookedin.model.AccountType;
 import backend25.bookedin.model.AccountTypeRepository;
 import backend25.bookedin.model.AppUser;
 import backend25.bookedin.model.AppUserRepository;
-import backend25.bookedin.model.Book;
 import backend25.bookedin.model.ChangePasswordForm;
 import backend25.bookedin.model.CountryRepository;
 import backend25.bookedin.model.RegisterForm;
@@ -91,8 +86,8 @@ public class BookedinController {
     return "login";
   } 
 
-  @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
   @RequestMapping(value="users/{username}", method=RequestMethod.GET)
+  @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
   public String getUserProfile(@PathVariable(required = true) String username, Model model, Authentication authentication) {
       AppUser profile = appUserRepository.findByUsernameIgnoreCase(username);
 
@@ -116,8 +111,8 @@ public class BookedinController {
       return "profile";
   }
 
-  @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
   @RequestMapping(value="users/{username}/edit", method=RequestMethod.GET)
+  @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
   public String getEditProfilePage(@PathVariable(required = true) String username, Model model, Authentication authentication) {
     AppUser profile = appUserRepository.findByUsernameIgnoreCase(username);
     AppUser loggedInUser = appUserRepository.findByUsernameIgnoreCase(authentication.getName());
@@ -152,8 +147,8 @@ public class BookedinController {
 
   }
 
-  @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
   @RequestMapping(value="users/{username}", method=RequestMethod.POST)
+  @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
   public String saveEditProfile(@Valid @ModelAttribute("profile") AppUser editedUser, BindingResult bindingResult, @PathVariable(required = false) String username, Model model, Authentication authentication) {
 
     if (bindingResult.hasErrors()) {
@@ -172,8 +167,8 @@ public class BookedinController {
     return "redirect:/users/" + editedUser.getUsername();
   }
 
-  @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
   @RequestMapping(value="users/{username}/changepw", method=RequestMethod.GET)
+  @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
   public String getPwChangeForm(@PathVariable(required = true) String username, Model model, Authentication authentication) {
 
     if (!username.toLowerCase().equals(authentication.getName().toLowerCase())) {
@@ -191,8 +186,8 @@ public class BookedinController {
 
   }
 
-  @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
   @RequestMapping(value="users/{username}/changepw", method=RequestMethod.POST)
+  @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
   public String updatePw(@Valid @ModelAttribute("changePwForm") ChangePasswordForm changePwForm, BindingResult bindingResult, @PathVariable(required = false) String username, Model model, Authentication authentication) {
 
     AppUser currentDetails = appUserRepository.findByUsernameIgnoreCase(authentication.getName());
@@ -224,9 +219,8 @@ public class BookedinController {
 
   }
   
-
-  @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
   @RequestMapping(value="search", method=RequestMethod.GET)
+  @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
   public String getSearch(Authentication authentication, Model model) {
     AppUser user = appUserRepository.findByUsernameIgnoreCase(authentication.getName());
     model.addAttribute("user", user);
@@ -240,8 +234,8 @@ public class BookedinController {
     return "search";
   }
 
-  @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
   @RequestMapping(value="index", method=RequestMethod.GET)
+  @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
   public String getIndex(Authentication authentication, Model model) {
     AppUser user = appUserRepository.findByUsernameIgnoreCase(authentication.getName());
 
