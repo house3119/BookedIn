@@ -29,7 +29,8 @@ public class WebSecurityConfig {
 
 	private static final AntPathRequestMatcher[] WHITE_LIST_URLS = {
 		new AntPathRequestMatcher("/h2-console/**"),
-		new AntPathRequestMatcher("/register")
+		new AntPathRequestMatcher("/register"),
+		new AntPathRequestMatcher("/favicon.ico")
 	};
 
 	@Bean
@@ -38,6 +39,7 @@ public class WebSecurityConfig {
 		http.authorizeHttpRequests(
 				authorize -> authorize
 				.requestMatchers(antMatcher("/css/**")).permitAll()
+				.requestMatchers(antMatcher("/favicon.ico")).permitAll()
 				.requestMatchers(WHITE_LIST_URLS).permitAll()
 				.anyRequest().authenticated())
 				.headers(headers -> headers.frameOptions(frameOptions -> frameOptions .disable())) // for h2console

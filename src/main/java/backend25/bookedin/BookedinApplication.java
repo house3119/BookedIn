@@ -48,16 +48,20 @@ public class BookedinApplication {
 
 
 			log.info("Add account types to db...");
-			accountTypeRepository.save(new AccountType("USER", "Basic user without any extra priviledges."));
-			accountTypeRepository.save(new AccountType("ADMIN", "Admin level user. Can perform various actions that normal users can't."));
+			if (accountTypeRepository.count() == 0) {
+				accountTypeRepository.save(new AccountType("USER", "Basic user without any extra priviledges."));
+				accountTypeRepository.save(new AccountType("ADMIN", "Admin level user. Can perform various actions that normal users can't."));
+			}
 
 
 			log.info("Add countries to db from file...");
-			try (CSVReader csvReader = new CSVReader(new FileReader("src/main/resources/static/FCDO_Geographical_Names_Index_March_2024.csv"))) {
-				String[] next;
-				while ((next = csvReader.readNext()) != null) {
-					if (next[1] != "Name") {
-						countryRepository.save(new Country(next[1]));
+			if (countryRepository.count() == 0) {
+				try (CSVReader csvReader = new CSVReader(new FileReader("src/main/resources/static/FCDO_Geographical_Names_Index_March_2024.csv"))) {
+					String[] next;
+					while ((next = csvReader.readNext()) != null) {
+						if (next[1] != "Name") {
+							countryRepository.save(new Country(next[1]));
+						}
 					}
 				}
 			}
@@ -98,22 +102,24 @@ public class BookedinApplication {
 				"$2a$06$3jYRJrg0ghaaypjZ/.g4SethoeA51ph3UD4kZi9oPkeMTpjKU5uo6",
 				accountTypeRepository.findByType("USER")
 			);
-			appUserRepository.save(user1);
-			appUserRepository.save(user2);
-			appUserRepository.save(user3);
-			appUserRepository.save(user4);
+			if (appUserRepository.count() == 0) {
+				appUserRepository.save(user1);
+				appUserRepository.save(user2);
+				appUserRepository.save(user3);
+				appUserRepository.save(user4);
+
+				log.info("Bilbo follows Frodo and Gandalf...");
+				user1.getFollowing().add(user2);
+				user1.getFollowing().add(user3);
+				user2.getFollowers().add(user1);
+				user3.getFollowers().add(user1);
+
+				appUserRepository.save(user1);
+				appUserRepository.save(user2);
+				appUserRepository.save(user3);
+			}
 
 
-			log.info("Bilbo follows Frodo and Gandalf...");
-			user1.getFollowing().add(user2);
-			user1.getFollowing().add(user3);
-			user2.getFollowers().add(user1);
-			user3.getFollowers().add(user1);
-			appUserRepository.save(user1);
-			appUserRepository.save(user2);
-			appUserRepository.save(user3);
-
-			
 			log.info("Add some example books to db...");
 			Book book1 = new Book(
 				"Harry Potter and the Half-Blood Prince",
@@ -145,25 +151,30 @@ public class BookedinApplication {
 				"English",
 				"https://m.media-amazon.com/images/I/71jwSWY-VEL._SY522_.jpg"
 			);
-			bookRepository.save(book1);
-			bookRepository.save(book2);
-			bookRepository.save(book3);
+			if (bookRepository.count() == 0) {
+				bookRepository.save(book1);
+				bookRepository.save(book2);
+				bookRepository.save(book3);
+			}
 
 
 			log.info("Add a book to user...");
 			UsersBooks usersBook1 = new UsersBooks(user2, book1, LocalDate.now(), "Finished");
 			UsersBooks usersBook2 = new UsersBooks(user2, book2, LocalDate.now());
-			usersBooksRepository.save(usersBook1);
-			usersBooksRepository.save(usersBook2);
+			if (usersBooksRepository.count() == 0) {
+				usersBooksRepository.save(usersBook1);
+				usersBooksRepository.save(usersBook2);
+				usersBooksRepository.save(new UsersBooks(user4, book3, LocalDate.now(), "Currently reading"));
+			}
 
-			usersBooksRepository.save(new UsersBooks(user4, book3, LocalDate.now(), "Currently reading"));
 
 			log.info("Add review for a book...");
-			Review review = new Review("Hyvä oli", 5, usersBook1);
-			reviewRepository.save(review);
-			usersBook1.setReview(review);
-			usersBooksRepository.save(usersBook1);
-
+			if (reviewRepository.count() == 0) {
+				Review review = new Review("Hyvä oli", 5, usersBook1);
+				reviewRepository.save(review);
+				usersBook1.setReview(review);
+				usersBooksRepository.save(usersBook1);
+			}
 
 		};
 
