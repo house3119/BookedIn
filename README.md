@@ -1,6 +1,9 @@
 # BookedIn
 BookedIn is a simple community for readers. Make an account, share and review what you have been reading recently and see what others have been reading.
 
+##
+BookedIn now live! [https://booked-in-bookedin.2.rahtiapp.fi/](https://booked-in-bookedin.2.rahtiapp.fi/)
+
 ## Introduction
 The main idea for BookedIn is to be a small hub for readers. Add books to your collection, review and share them. See what others have been reading and what is popular.
 
