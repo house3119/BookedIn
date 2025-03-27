@@ -71,6 +71,8 @@ public class Book {
     this.isbn = isbn;
     this.page_count = page_count;
     this.language = language;
+    this.img_link = "";
+    this.description = "";
   }
 
   public Book(@NotEmpty(message = "Title is required") @Size(max = 100, message = "Max 100 characters") String title,

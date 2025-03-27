@@ -31,6 +31,7 @@ public class AccountType {
 
   public AccountType(@NotEmpty(message = "Account type is mandatory") @Size(max = 100) String account_type) {
     this.type = account_type;
+    this.description = "";
   }
 
   public AccountType(@NotEmpty(message = "Account type is mandatory") @Size(max = 100) String account_type,
@@ -67,6 +68,14 @@ public class AccountType {
   public String toString() {
     return "AccountType [account_type_id=" + account_type_id + ", account_type=" + type + ", description="
         + description + "]";
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
   }
 
 }
