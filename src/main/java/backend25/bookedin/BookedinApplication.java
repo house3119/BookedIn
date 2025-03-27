@@ -1,6 +1,9 @@
 package backend25.bookedin;
 
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.util.HashSet;
 
@@ -53,7 +56,7 @@ public class BookedinApplication {
 				accountTypeRepository.save(new AccountType("ADMIN", "Admin level user. Can perform various actions that normal users can't."));
 			}
 
-
+			/*
 			log.info("Add countries to db from file...");
 			if (countryRepository.count() == 0) {
 				try (CSVReader csvReader = new CSVReader(new FileReader("src/main/resources/static/FCDO_Geographical_Names_Index_March_2024.csv"))) {
@@ -65,6 +68,25 @@ public class BookedinApplication {
 					}
 				}
 			}
+			*/
+
+			if (countryRepository.count() == 0) {
+					try (InputStream inputStream = getClass().getClassLoader()
+									.getResourceAsStream("static/FCDO_Geographical_Names_Index_March_2024.csv");
+							InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+							CSVReader csvReader = new CSVReader(inputStreamReader)) {
+
+							String[] next;
+							while ((next = csvReader.readNext()) != null) {
+									if (!"Name".equals(next[1])) {
+											countryRepository.save(new Country(next[1]));
+									}
+							}
+					} catch (IOException e) {
+							e.printStackTrace();
+					}
+			}
+
 
 
 			log.info("Add some users to db...");
